@@ -9,7 +9,7 @@
   - [Table des contenus](#table-des-contenus)
   - [Fonctionnalités principales](#fonctionnalités-principales)
   - [Instalation et utilisation](#instalation-et-utilisation)
-  - [Comment contribuer à JavaPandas](#comment-contribuer-à-javapandas)
+  - [Workflow et revue du code](#workflow-et-revue-du-code)
   - [Outils utilisés et feedback](#outils-utilisés-et-feedback)
   - [Documentation](#documentation)
 
@@ -17,7 +17,7 @@
 
 ## Instalation et utilisation
 
-## Comment contribuer à JavaPandas
+## Workflow et revue du code
 
 Pour contribuer au projet, il est nécessaire d'utiliser [git](https://git-scm.com/) et d'avoir un compte GitHub.
 JavaPandas utilise le workflow `Feature Branch` (plus d'informations [ici](https://git-scm.com/book/ms/v2/Git-Branching-Branching-Workflows)). Pour contribuer au projet, suivez ces étapes :
