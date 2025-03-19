@@ -4,8 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 
 public class DataFrame implements DataFrameInterface{    
-    private HashMap<String, List<Object>> Columns; //The string is the label, the list are the elements on the column
-    //The indexes are numerical, therefore we don't need to implement anything
+    private HashMap<String, List<?>> Columns;
 
     //CONSTRUCTORS
     public DataFrame(String[] columnTypes){
@@ -22,6 +21,17 @@ public class DataFrame implements DataFrameInterface{
 
     public DataFrame(DataFrame mothFrame, String[] labels){
         //TODO: Create data frame from sub-secition of labels
+    }
+
+    //CREATION METHODS
+    @Override
+    public void addRow(){
+        //TODO
+    }
+
+    @Override
+    public void addCol(String label){
+        //TODO
     }
 
     //REPRESENTATION METHODS

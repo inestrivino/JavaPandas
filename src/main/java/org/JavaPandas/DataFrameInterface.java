@@ -6,6 +6,10 @@ public interface DataFrameInterface {
     public void showLastLines(int n);
     public void showDataFrame();
 
+    //Creation methods
+    public void addRow();
+    public void addCol(String label);
+
     //Statistical calculation methods
     public void sum(String label);
     public void mean(String label);
