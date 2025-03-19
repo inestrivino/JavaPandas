@@ -7,17 +7,17 @@
 - [JavaPandas](#javapandas)
   - [Information basique](#information-basique)
   - [Table des contenus](#table-des-contenus)
-  - [Caractéristiques principales](#caractéristiques-principales)
+  - [Fonctionnalités principales](#fonctionnalités-principales)
   - [Instalation et utilisation](#instalation-et-utilisation)
-  - [Comment apporter à JavaPandas](#comment-apporter-à-javapandas)
+  - [Comment contribuer à JavaPandas](#comment-contribuer-à-javapandas)
   - [Outils utilisés et feedback](#outils-utilisés-et-feedback)
   - [Documentation](#documentation)
 
-## Caractéristiques principales
+## Fonctionnalités principales
 
 ## Instalation et utilisation
 
-## Comment apporter à JavaPandas
+## Comment contribuer à JavaPandas
 
 ## Outils utilisés et feedback
 
