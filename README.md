@@ -19,42 +19,45 @@
 
 ## Comment contribuer à JavaPandas
 
-If you find a bug or want to request a new feature, please open a new [issue](https://github.com/inestrivino/PandasJava/issues), using the correct template.
+Pour contribuer au projet, il est nécessaire d'utiliser [git](https://git-scm.com/) et d'avoir un compte GitHub.
+JavaPandas utilise le workflow `Feature Branch` (plus d'informations [ici](https://git-scm.com/book/ms/v2/Git-Branching-Branching-Workflows)). Pour contribuer au projet, suivez ces étapes :
 
-If you have found an issue you'd like to contribute to, comment with the exact text `take` to automatically assign you the issue (this will take seconds and may require refreshing the page to see it).
-If for whatever reason you are not able to continue working with the issue, please unassign it, so other people know it’s available again.
+1. Fork le projet, en choisissant d'inclure toutes les branches.
+2. Assurez-vous que votre branche locale `main` est à jour avec le dépôt actuel de JavaPandas.
+3. Créez maintenant une nouvelle feature branch dans laquelle apporter vos modifications.
 
-To contribute to the project, it is necessary to use [git](https://git-scm.com/) and have a GitHub account.
-JavaPandas uses the `Feature Branch` workflow (more information [here](https://git-scm.com/book/ms/v2/Git-Branching-Branching-Workflows)). To contribute to the project follow these steps:
+```bash
+git checkout -b shiny-new-feature
+```
 
-1. Fork the project, choosing to include all branches.
-2. Make sure your local `main` branch is up to date with the current JavaPandas repository.
-3. Now create a new feature branch in which to make your changes.
-```git checkout -b shiny-new-feature```
-4. Make your changes in the new branch.
-5. Push your changes to appear publicly in your GitHub fork of the project.
-```git push origin shiny-new-feature```
-6. In your GitHub repository, click on `Compare and pull request`. Write a descriptive title and a description of your changes.
-7. Click `Send Pull Request`.
+4. Effectuez vos modifications dans la nouvelle branche.
+5. Poussez vos modifications pour qu'elles apparaissent publiquement dans votre fork GitHub du projet.
 
-Once your code has been submitted and passes all tests, it will be reviewed according to the following checklist:
+```bash
+git push origin shiny-new-feature
+```
 
-- [ ] Est-ce que le code fonctionne? 
-- [ ] Est-ce qu'il répond à l'objectif? 
-- [ ] Est-ce que la logique est correcte?
-- [ ] Le code est-il facile à comprendre?
-- [ ] Le code est-il conforme aux conventions?
-- [ ] Y a-t-il du code inutile/redondant?
-- [ ] Le code est-il suffisamment modulaire?
-- [ ] Y a-t-il du code introduit pour debugger qui devrait être supprimé?
-- [ ] Les données d'entrées sont-elles vérifiées?
-- [ ] Les erreurs et exceptions sont-elles traitées?
-- [ ] Le cas de valeurs non valides pour les paramètres est-il traité?
-- [ ] Le travail a-t-il été commenté? Les commentaires décrivent-ils les intentions?
-- [ ] Toutes les fonctions sont-elles commentées?
-- [ ] La prise en charge de cas pathologiques est-elle documentée?
-- [ ] Est-ce que du code de test a été fourni?
-- [ ] Les tests unitaires vérifient que le code répond à l'objectif?
+6. Dans votre dépôt GitHub, cliquez sur `Compare and pull request`. Écrivez un titre descriptif et une description de vos modifications.
+7. Cliquez sur `Send Pull Request`.
+
+Une fois votre code soumis et après avoir passé tous les tests, il sera examiné selon la liste de vérification suivante :
+
+- [ ] Le code fonctionne-t-il ?
+- [ ] Répond-il à l'objectif ?
+- [ ] La logique est-elle correcte ?
+- [ ] Le code est-il facile à comprendre ?
+- [ ] Le code est-il conforme aux conventions ?
+- [ ] Y a-t-il du code inutile/redondant ?
+- [ ] Le code est-il suffisamment modulaire ?
+- [ ] Y a-t-il du code introduit pour le débogage qui devrait être supprimé ?
+- [ ] Les données d'entrée sont-elles vérifiées ?
+- [ ] Les erreurs et exceptions sont-elles traitées ?
+- [ ] Le cas de valeurs non valides pour les paramètres est-il traité ?
+- [ ] Le travail a-t-il été commenté ? Les commentaires décrivent-ils les intentions ?
+- [ ] Toutes les fonctions sont-elles commentées ?
+- [ ] La prise en charge des cas pathologiques est-elle documentée ?
+- [ ] Du code de test a-t-il été fourni ?
+- [ ] Les tests unitaires vérifient-ils que le code répond à l'objectif ?
 
 ## Outils utilisés et feedback
 
