@@ -8,13 +8,7 @@ on:
 #This worflow builds and pushes the demo of our project defined in the javapandas-demo dockerfile
 
 jobs:
-  build-and-push: 
-    runs-on: ubuntu-latest
-    permissions: 
-      content: read
-      packages: write
-    
-    build-and-push:
+  build-and-push:
     #First we check that everything went well during the maven workflow
     if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
