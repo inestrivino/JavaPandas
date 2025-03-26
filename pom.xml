@@ -46,7 +46,68 @@
                     </execution>
                 </executions>
             </plugin>
+            
+            <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-javadoc-plugin</artifactId>
+                    <version>3.11.2</version>
+                    <configuration>
+                        <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
+                        <show>public</show>
+                    </configuration>
+                </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-site-plugin</artifactId>
+                <version>3.12.1</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.apache.maven.doxia</groupId>
+                        <artifactId>doxia-module-markdown</artifactId>
+                        <version>1.9</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.11.2</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>javadoc</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-scm-publish-plugin</artifactId>
+                <version>3.3.0</version>
+                <configuration>
+                    <repository>https://github.com/inestrivino/javapandas.git</repository>
+                    <branch>github-pages</branch>
+                    <checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
+                    <provider>git</provider>
+                    <pubScmUrl>https://github.com/inestrivino/javapandas.git</pubScmUrl>
+                </configuration>
+            </plugin>
         </plugins>
     </build>
+    <reporting>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>3.11.2</version>
+                <configuration>
+                <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
+                <show>public</show>
+                </configuration>
+            </plugin>
+        </plugins>
+    </reporting>
 
 </project>
