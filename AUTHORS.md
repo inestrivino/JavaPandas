@@ -1,2 +1,0 @@
-Inés TRIVINO
-Eloïse BLOT
