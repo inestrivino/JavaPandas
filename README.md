@@ -10,7 +10,8 @@
   - [Fonctionnalités principales](#fonctionnalités-principales)
   - [Instalation et utilisation](#instalation-et-utilisation)
   - [Workflow et revue du code](#workflow-et-revue-du-code)
-  - [Outils utilisés et feedback](#outils-utilisés-et-feedback)
+  - [Outils utilisés](#outils-utilisés)
+  - [Feedback](#feedback)
   - [Documentation](#documentation)
 
 ## Fonctionnalités principales
@@ -59,6 +60,10 @@ Une fois votre code soumis et après avoir passé tous les tests, il sera examin
 - [ ] Du code de test a-t-il été fourni ?
 - [ ] Les tests unitaires vérifient-ils que le code répond à l'objectif ?
 
-## Outils utilisés et feedback
+## Outils utilisés
+
+On utilise Maven pour faire Integration Continue. Notre projet maven fait du tests pour chaque commit vers une branche, et en utilisant la librairie JaCoco, on peut garantir couverture du code. Chaque fois que on fait push vers main, notre CI deploiera aussi un snapshot dans le `Github Packages` associé à notre projet.
+
+## Feedback
 
 ## Documentation
