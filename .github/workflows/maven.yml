@@ -41,11 +41,19 @@ jobs:
     - name: Verify Code Coverage
       id: coverage
       run: |
-        mvn verify
-        COVERAGE=$(mvn jacoco:report | grep -oP 'Total.*?\K\d{1,3}(?=%)')
-        echo "Code coverage is $COVERAGE%"
-        echo "coverage=$COVERAGE" >> $GITHUB_ENV
-        echo "$COVERAGE" > coverage.txt  # Save coverage to a file
+      mvn verify
+      mvn jacoco:report
+      REPORT=$(mvn jacoco:report)
+      echo "JaCoCo Report: $REPORT"
+      COVERAGE=$(echo "$REPORT" | grep -oP 'Total.*?\K\d{1,3}(?=%)')
+      if [ -z "$COVERAGE" ]; then
+        echo "Failed to extract coverage percentage from JaCoCo report."
+        exit 1
+      fi
+      echo "Code coverage is $COVERAGE%"
+      echo "coverage=$COVERAGE" >> $GITHUB_ENV
+      echo "$COVERAGE" > coverage.txt
+
 
     #If the branch is main, the previous steps went well, and the coverage is acceptable, the code is deployed as a github package
     - name: Deploy Snapshot to GitHub Packages
