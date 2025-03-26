@@ -24,9 +24,14 @@
         </dependency>
     </dependencies>
 
+    <scm>
+        <connection>scm:git:https://github.com/inestrivino/javapandas.git</connection>
+        <developerConnection>scm:git:https://github.com/inestrivino/javapandas.git</developerConnection>
+        <url>https://github.com/inestrivino/javapandas</url>
+    </scm>
+
     <build>
         <plugins>
-            <!-- Code Coverage report generation -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
@@ -47,15 +52,6 @@
                 </executions>
             </plugin>
             
-            <plugin>
-                    <groupId>org.apache.maven.plugins</groupId>
-                    <artifactId>maven-javadoc-plugin</artifactId>
-                    <version>3.11.2</version>
-                    <configuration>
-                        <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
-                        <show>public</show>
-                    </configuration>
-                </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-site-plugin</artifactId>
@@ -88,26 +84,13 @@
                 <version>3.3.0</version>
                 <configuration>
                     <repository>https://github.com/inestrivino/javapandas.git</repository>
-                    <branch>github-pages</branch>
+                    <branch>gh-pages</branch>
+                    <content>${project.build.directory}/site</content>
                     <checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
-                    <provider>git</provider>
-                    <pubScmUrl>https://github.com/inestrivino/javapandas.git</pubScmUrl>
+                    <pubScmUrl>scm:git:https://github.com/inestrivino/javapandas.git</pubScmUrl>
+                    <scmBranch>main</scmBranch>
                 </configuration>
             </plugin>
         </plugins>
     </build>
-    <reporting>
-        <plugins>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-javadoc-plugin</artifactId>
-                <version>3.11.2</version>
-                <configuration>
-                <stylesheetfile>${basedir}/src/main/javadoc/stylesheet.css</stylesheetfile>
-                <show>public</show>
-                </configuration>
-            </plugin>
-        </plugins>
-    </reporting>
-
 </project>
