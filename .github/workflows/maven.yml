@@ -33,10 +33,15 @@ jobs:
       run: mvn test
 
     - name: Verify Code Coverage
-      run: mvn verify
+      id: coverage
+      run: |
+        mvn verify
+        COVERAGE=$(mvn jacoco:report | grep -oP 'Total.*?\K\d{1,3}(?=%)')
+        echo "Code coverage is $COVERAGE%"
+        echo "coverage=$COVERAGE" >> $GITHUB_ENV
 
     - name: Deploy Snapshot to GitHub Packages
-      if: github.ref == 'refs/heads/main' && success()  # Only deploy from the main branch (refs/heads/main) and if all previous steps succeed (success())
+      if: github.ref == 'refs/heads/main' && env.coverage >= 80 && success()  # Only deploy from the main branch (refs/heads/main) and if all previous steps succeed (success())
       run: mvn deploy -s $GITHUB_WORKSPACE/settings.xml -DaltDeploymentRepository=github::default::https://maven.pkg.github.com/inestrivino/JavaPandas
       env:
         GITHUB_TOKEN: ${{ github.token }}
