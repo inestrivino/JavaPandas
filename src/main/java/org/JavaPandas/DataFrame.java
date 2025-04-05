@@ -27,11 +27,13 @@ public class DataFrame implements DataFrameInterface{
     @Override
     public void addRow(){
         //TODO
+        throw new UnsupportedOperationException("Unimplemented method 'addRow'");
     }
 
     @Override
     public void addCol(String label){
         //TODO
+        throw new UnsupportedOperationException("Unimplemented method 'addCol'");
     }
 
     //REPRESENTATION METHODS
