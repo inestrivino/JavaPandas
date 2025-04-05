@@ -4,10 +4,10 @@
 FROM openjdk:19-jdk-slim
 
 # Working directory
-WORKDIR /usr/src/app
+WORKDIR /usr/src/demo
 
-# We copy the application's JAR file to the container
-COPY target/JavaPandas.jar .
+# We copy the application's JAR file to the container TODO
+# COPY COPY target/javapandas-1.0-SNAPSHOT.jar demo.jar .
 
-# Command to run the demo when the container starts
-CMD ["java", "-jar", "JavaPandas.jar"]
+# Command to run the demo when the container starts TODO
+# CMD ["java", "-jar", "JavaPandas.jar"]
