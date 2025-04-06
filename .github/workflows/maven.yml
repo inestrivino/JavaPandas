@@ -3,10 +3,10 @@ name: Maven Package
 on:
   push:
     branches:
-      - '*'
+      - 'main'
   pull_request:
     branches:
-      - '*'
+      - 'main'
 
 # This workflow compiles the maven project, executes tests, checks code coverage, and deploys to a GitHub package. It does so for all branches.
 
