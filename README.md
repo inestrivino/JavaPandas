@@ -1,8 +1,5 @@
 # JavaPandas
 [![Unit Tests](https://github.com/inestrivino/JavaPandas/actions/workflows/maven.yml/badge.svg)](https://github.com/inestrivino/JavaPandas/actions)
-![Coverage Badge](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/inestrivino/JavaPandas/main/coverage.txt)
-
-[![Unit Tests](https://github.com/inestrivino/JavaPandas/actions/workflows/maven.yml/badge.svg)](https://github.com/inestrivino/JavaPandas/actions)
 
 ## Information basique
 
