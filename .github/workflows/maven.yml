@@ -8,7 +8,7 @@ on:
     branches:
       - '*'
 
-# This workflow compiles the maven project, executes tests, checks code coverage, and deploys to a GitHub package
+# This workflow compiles the maven project, executes tests, checks code coverage, and deploys to a GitHub package. It does so for all branches.
 
 jobs:
   build:
@@ -54,6 +54,7 @@ jobs:
         distribution: 'temurin'
 
     # Checks what is the code coverage according to jacoco
+    # TODO update minimum code coverage to 80 when we start implementing the code
     - name: Verify Code Coverage
       id: coverage
       run: |
@@ -76,13 +77,6 @@ jobs:
         echo "coverage=$COVERAGE" >> $GITHUB_ENV
         echo "$COVERAGE" > coverage.txt
 
-    # Upload the coverage report as an artifact
-    - name: Upload Coverage Report
-      uses: actions/upload-artifact@v4
-      with:
-        name: coverage-report
-        path: coverage.txt
-
   deploy:
     runs-on: ubuntu-latest
     needs: coverage
@@ -101,13 +95,6 @@ jobs:
         distribution: 'temurin'
         server-id: github # Value of the distributionManagement/repository/id field of the pom.xml
         settings-path: ${{ github.workspace }} # location for the settings.xml file
-
-    # Download the coverage report from the previous job
-    - name: Download Coverage Report
-      uses: actions/download-artifact@v4
-      with:
-        name: coverage-report
-        path: coverage.txt
 
     # Deploy Snapshot to GitHub Packages
     - name: Deploy Snapshot to GitHub Packages
