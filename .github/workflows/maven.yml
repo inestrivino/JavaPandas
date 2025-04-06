@@ -77,17 +77,6 @@ jobs:
         echo "coverage=$COVERAGE" >> $GITHUB_ENV
         echo "$COVERAGE" > coverage.txt
 
-    # Commit the coverage.txt file back to the repository
-    - name: Commit coverage.txt to repository
-      run: |
-        git config --global user.name 'github-actions'
-        git config --global user.email 'github-actions@github.com'
-        git add coverage.txt
-        git commit -m "Update coverage.txt with new coverage value"
-        git push
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
   deploy:
     runs-on: ubuntu-latest
     needs: coverage
