@@ -16,7 +16,12 @@
 
 ## Fonctionnalités principales
 
+<!---Description of functionalities offered by our library--->
+
 ## Instalation et utilisation
+
+<!---How to install and use the library based on the public snapshot--->
+<!---In this section, include existing docker images with a description, and a link to where they are published--->
 
 ## Workflow et revue du code
 
@@ -41,7 +46,10 @@ git push origin shiny-new-feature
 6. Dans votre dépôt GitHub, cliquez sur `Compare and pull request`. Écrivez un titre descriptif et une description de vos modifications.
 7. Cliquez sur `Send Pull Request`.
 
-Une fois votre code soumis et après avoir passé tous les tests, il sera examiné selon la liste de vérification suivante :
+Une fois votre code soumis et après avoir passé tous les tests, il sera examiné selon notre liste de vérification.
+
+<details>
+  <summary>Liste de vérification pour le code review</summary>
 
 - [ ] Le code fonctionne-t-il ?
 - [ ] Répond-il à l'objectif ?
@@ -59,11 +67,20 @@ Une fois votre code soumis et après avoir passé tous les tests, il sera examin
 - [ ] La prise en charge des cas pathologiques est-elle documentée ?
 - [ ] Du code de test a-t-il été fourni ?
 - [ ] Les tests unitaires vérifient-ils que le code répond à l'objectif ?
+</details>
 
 ## Outils utilisés
 
-On utilise Maven pour faire Integration Continue. Notre projet maven fait du tests pour chaque commit vers une branche, et en utilisant la librairie JaCoco, on peut garantir couverture du code. Chaque fois que on fait push vers main, notre CI deploiera aussi un snapshot dans le `Github Packages` associé à notre projet.
+- [Maven](https://github.com/apache/maven): Utilisé our compiler et tester le code dans le cadre de l'intégration continue.
+- [Github Packages](https://docs.github.com/fr/packages): Utilisé pour deployer un snapshot de notre projet après chaque push vers main.
+- [JaCoco](https://github.com/jacoco/jacoco): Utilisé pour vérifier la couverture du code dans le cadre de l'intégration continue.
+- [Docker](https://www.docker.com/) et [Github Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry): Utilisés pour créer et deployer l'image du demo du projet.
+- [Github Pages](https://pages.github.com/): Utilisé pour le site web et documentation du projet.
 
 ## Feedback
 
+<!---Description of our experience using the outils we chose for the project--->
+
 ## Documentation
+
+La totalité de la documentation technique de la librairie peut-être trouvé dans le site officiel: [Documentation JavaPandas](https://inestrivino.github.io/JavaPandas/apidocs/org/JavaPandas/package-summary.html).
