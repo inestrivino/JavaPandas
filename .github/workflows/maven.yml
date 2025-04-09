@@ -124,6 +124,5 @@ jobs:
         run: mvn clean site
 
       - name: Publier le site sur gh-pages
-        run: mvn scm-publish:publish-scm
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: mvn scm-publish:publish-scm -Dgithub.token=${{ secrets.GITHUB_TOKEN }}
+    
