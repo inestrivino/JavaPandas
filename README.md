@@ -85,3 +85,6 @@ Une fois votre code soumis et après avoir passé tous les tests, il sera examin
 ## Documentation
 
 La totalité de la documentation technique de la librairie peut-être trouvé dans le site officiel: [Documentation JavaPandas](https://inestrivino.github.io/JavaPandas/apidocs/org/JavaPandas/package-summary.html).
+
+
+
