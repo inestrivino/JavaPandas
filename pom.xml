@@ -65,6 +65,21 @@
                     </dependency>
                 </dependencies>
             </plugin>
+
+            <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-scm-publish-plugin</artifactId>
+            <version>3.3.0</version>
+            <configuration>
+                <repository>https://x-access-token:${github.token}@github.com/inestrivino/javapandas.git</repository>
+                <branch>gh-pages</branch>
+                <content>${project.build.directory}/site</content>
+                <checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
+                <pubScmUrl>scm:git:https://x-access-token:${github.token}@github.com/inestrivino/javapandas.git</pubScmUrl>
+                <scmBranch>gh-pages</scmBranch>
+            </configuration>
+            </plugin>
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-javadoc-plugin</artifactId>
@@ -78,19 +93,6 @@
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-scm-publish-plugin</artifactId>
-                <version>3.3.0</version>
-                <configuration>
-                    <repository>https://github.com/inestrivino/javapandas.git</repository>
-                    <branch>gh-pages</branch>
-                    <content>${project.build.directory}/site</content>
-                    <checkoutDirectory>${project.build.directory}/scmpublish</checkoutDirectory>
-                    <pubScmUrl>scm:git:https://github.com/inestrivino/javapandas.git</pubScmUrl>
-                    <scmBranch>gh-pages</scmBranch>
-                </configuration>
             </plugin>
         </plugins>
     </build>
