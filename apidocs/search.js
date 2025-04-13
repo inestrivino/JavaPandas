@@ -1,8 +1,26 @@
 /*
- * Copyright (c) 2015, 2024, Oracle and/or its affiliates. All rights reserved.
+ * Copyright (c) 2015, 2022, Oracle and/or its affiliates. All rights reserved.
  * DO NOT ALTER OR REMOVE COPYRIGHT NOTICES OR THIS FILE HEADER.
  *
- * Licensed under the Universal Permissive License v 1.0 as shown at https://oss.oracle.com/licenses/upl/
+ * This code is free software; you can redistribute it and/or modify it
+ * under the terms of the GNU General Public License version 2 only, as
+ * published by the Free Software Foundation.  Oracle designates this
+ * particular file as subject to the "Classpath" exception as provided
+ * by Oracle in the LICENSE file that accompanied this code.
+ *
+ * This code is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or
+ * FITNESS FOR A PARTICULAR PURPOSE.  See the GNU General Public License
+ * version 2 for more details (a copy is included in the LICENSE file that
+ * accompanied this code).
+ *
+ * You should have received a copy of the GNU General Public License version
+ * 2 along with this work; if not, write to the Free Software Foundation,
+ * Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+ *
+ * Please contact Oracle, 500 Oracle Parkway, Redwood Shores, CA 94065 USA
+ * or visit www.oracle.com if you need additional information or have any
+ * questions.
  */
 "use strict";
 const messages = {
@@ -13,6 +31,8 @@ const messages = {
     loading: "Loading search index...",
     searching: "Searching...",
     redirecting: "Redirecting to first result...",
+    copyUrl: "Copy URL",
+    urlCopied: "Copied!"
 }
 const categories = {
     modules: "Modules",
@@ -23,10 +43,7 @@ const categories = {
 };
 const highlight = "<span class='result-highlight'>$&</span>";
 const NO_MATCH = {};
-const MAX_RESULTS = 300;
-const UNICODE_LETTER = 0;
-const UNICODE_DIGIT = 1;
-const UNICODE_OTHER = 2;
+const MAX_RESULTS = 500;
 function checkUnnamed(name, separator) {
     return name === "<Unnamed>" || !name ? "" : name + separator;
 }
@@ -110,13 +127,13 @@ function createMatcher(term, camelCase) {
     var pattern = "";
     var upperCase = [];
     term.trim().split(/\s+/).forEach(function(w, index, array) {
-        var tokens = w.split(/(?=[\p{Lu},.()<>?[\/])/u);
+        var tokens = w.split(/(?=[A-Z,.()<>?[\/])/);
         for (var i = 0; i < tokens.length; i++) {
             var s = tokens[i];
             // ',' and '?' are the only delimiters commonly followed by space in java signatures
-            pattern += "(" + escapeUnicodeRegex(s).replace(/[,?]/g, "$&\\s*?") + ")";
+            pattern += "(" + $.ui.autocomplete.escapeRegex(s).replace(/[,?]/g, "$&\\s*?") + ")";
             upperCase.push(false);
-            var isWordToken =  /[\p{L}\p{Nd}_]$/u.test(s);
+            var isWordToken =  /\w$/.test(s);
             if (isWordToken) {
                 if (i === tokens.length - 1 && index < array.length - 1) {
                     // space in query string matches all delimiters
@@ -126,7 +143,7 @@ function createMatcher(term, camelCase) {
                     if (!camelCase && isUpperCase(s) && s.length === 1) {
                         pattern += "()";
                     } else {
-                        pattern += "([\\p{L}\\p{Nd}\\p{Sc}<>?[\\]]*?)";
+                        pattern += "([a-z0-9$<>?[\\]]*?)";
                     }
                     upperCase.push(isUpperCase(s[0]));
                 }
@@ -136,52 +153,52 @@ function createMatcher(term, camelCase) {
             }
         }
     });
-    var re = new RegExp(pattern, "gui");
+    var re = new RegExp(pattern, "gi");
     re.upperCase = upperCase;
     return re;
 }
-// Unicode regular expressions do not allow certain characters to be escaped
-function escapeUnicodeRegex(pattern) {
-    return pattern.replace(/[\[\]{}()*+?.\\^$|\s]/g, '\\$&');
-}
-function findMatch(matcher, input, startOfName, endOfName) {
+function analyzeMatch(matcher, input, startOfName, category) {
     var from = startOfName;
     matcher.lastIndex = from;
     var match = matcher.exec(input);
-    // Expand search area until we get a valid result or reach the beginning of the string
-    while (!match || match.index + match[0].length < startOfName || endOfName < match.index) {
-        if (from === 0) {
-            return NO_MATCH;
-        }
+    while (!match && from > 1) {
         from = input.lastIndexOf(".", from - 2) + 1;
         matcher.lastIndex = from;
         match = matcher.exec(input);
     }
+    if (!match) {
+        return NO_MATCH;
+    }
     var boundaries = [];
     var matchEnd = match.index + match[0].length;
+    var leftParen = input.indexOf("(");
+    // exclude peripheral matches
+    if (category !== "modules" && category !== "searchTags") {
+        if (leftParen > -1 && leftParen < match.index) {
+            return NO_MATCH;
+        } else if (startOfName - 1 >= matchEnd) {
+            return NO_MATCH;
+        }
+    }
+    var endOfName = leftParen > -1 ? leftParen : input.length;
     var score = 5;
     var start = match.index;
     var prevEnd = -1;
     for (var i = 1; i < match.length; i += 2) {
-        var charType = getCharType(input[start]);
+        var isUpper = isUpperCase(input[start]);
         var isMatcherUpper = matcher.upperCase[i];
         // capturing groups come in pairs, match and non-match
         boundaries.push(start, start + match[i].length);
         // make sure groups are anchored on a left word boundary
         var prevChar = input[start - 1] || "";
         var nextChar = input[start + 1] || "";
-        if (start !== 0) {
-            if (charType === UNICODE_DIGIT && getCharType(prevChar) === UNICODE_DIGIT) {
+        if (start !== 0 && !/[\W_]/.test(prevChar) && !/[\W_]/.test(input[start])) {
+            if (isUpper && (isLowerCase(prevChar) || isLowerCase(nextChar))) {
+                score -= 0.1;
+            } else if (isMatcherUpper && start === prevEnd) {
+                score -= isUpper ? 0.1 : 1.0;
+            } else {
                 return NO_MATCH;
-            } else if (charType === UNICODE_LETTER && getCharType(prevChar) === UNICODE_LETTER) {
-                var isUpper = isUpperCase(input[start]);
-                if (isUpper && (isLowerCase(prevChar) || isLowerCase(nextChar))) {
-                    score -= 0.1;
-                } else if (isMatcherUpper && start === prevEnd) {
-                    score -= isUpper ? 0.1 : 1.0;
-                } else {
-                    return NO_MATCH;
-                }
             }
         }
         prevEnd = start + match[i].length;
@@ -203,38 +220,27 @@ function findMatch(matcher, input, startOfName, endOfName) {
     return {
         input: input,
         score: score,
+        category: category,
         boundaries: boundaries
     };
 }
-function isLetter(s) {
-    return /\p{L}/u.test(s);
-}
 function isUpperCase(s) {
-    return /\p{Lu}/u.test(s);
+    return s !== s.toLowerCase();
 }
 function isLowerCase(s) {
-    return /\p{Ll}/u.test(s);
-}
-function isDigit(s) {
-    return /\p{Nd}/u.test(s);
-}
-function getCharType(s) {
-    if (isLetter(s)) {
-        return UNICODE_LETTER;
-    } else if (isDigit(s)) {
-        return UNICODE_DIGIT;
-    } else {
-        return UNICODE_OTHER;
-    }
+    return s !== s.toUpperCase();
 }
 function rateNoise(str) {
     return (str.match(/([.(])/g) || []).length / 5
-         + (str.match(/(\p{Lu}+)/gu) || []).length / 10
+         + (str.match(/([A-Z]+)/g) || []).length / 10
          +  str.length / 20;
 }
 function doSearch(request, response) {
     var term = request.term.trim();
     var maxResults = request.maxResults || MAX_RESULTS;
+    if (term.length === 0) {
+        return this.close();
+    }
     var matcher = {
         plainMatcher: createMatcher(term, false),
         camelCaseMatcher: createMatcher(term, true)
@@ -279,16 +285,13 @@ function doSearch(request, response) {
             var useQualified = useQualifiedName(category);
             var input = useQualified ? qualifiedName : simpleName;
             var startOfName = useQualified ? prefix.length : 0;
-            var endOfName = category === "members" && input.indexOf("(", startOfName) > -1
-                ? input.indexOf("(", startOfName) : input.length;
-            var m = findMatch(matcher.plainMatcher, input, startOfName, endOfName);
+            var m = analyzeMatch(matcher.plainMatcher, input, startOfName, category);
             if (m === NO_MATCH && matcher.camelCaseMatcher) {
-                m = findMatch(matcher.camelCaseMatcher, input, startOfName, endOfName);
+                m = analyzeMatch(matcher.camelCaseMatcher, input, startOfName, category);
             }
             if (m !== NO_MATCH) {
                 m.indexItem = item;
                 m.prefix = prefix;
-                m.category = category;
                 if (!useQualified) {
                     m.input = qualifiedName;
                     m.boundaries = m.boundaries.map(function(b) {
@@ -297,11 +300,11 @@ function doSearch(request, response) {
                 }
                 matches.push(m);
             }
-            return true;
+            return matches.length < maxResults;
         });
         return matches.sort(function(e1, e2) {
             return e2.score - e1.score;
-        }).slice(0, maxResults);
+        });
     }
 
     var result = searchIndex(moduleSearchIndex, "modules")
@@ -370,7 +373,7 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
             ? item.l
             : getHighlightedText(item.input, item.boundaries, 0, item.input.length);
         var idx = item.indexItem;
-        if (item.category === "searchTags" && idx && idx.h) {
+        if (item.category === "searchTags" && idx.h) {
             if (idx.d) {
                 div.html(label + "<span class='search-tag-holder-result'> (" + idx.h + ")</span><br><span class='search-tag-desc-result'>"
                     + idx.d + "</span><br>");
@@ -384,30 +387,58 @@ $.widget("custom.catcomplete", $.ui.autocomplete, {
     }
 });
 $(function() {
+    var expanded = false;
+    var windowWidth;
+    function collapse() {
+        if (expanded) {
+            $("div#navbar-top").removeAttr("style");
+            $("button#navbar-toggle-button")
+                .removeClass("expanded")
+                .attr("aria-expanded", "false");
+            expanded = false;
+        }
+    }
+    $("button#navbar-toggle-button").click(function (e) {
+        if (expanded) {
+            collapse();
+        } else {
+            var navbar = $("div#navbar-top");
+            navbar.height(navbar.prop("scrollHeight"));
+            $("button#navbar-toggle-button")
+                .addClass("expanded")
+                .attr("aria-expanded", "true");
+            expanded = true;
+            windowWidth = window.innerWidth;
+        }
+    });
+    $("ul.sub-nav-list-small li a").click(collapse);
+    $("input#search-input").focus(collapse);
+    $("main").click(collapse);
+    $("section[id] > :header, :header[id], :header:has(a[id])").hover(
+        function () {
+            $(this).append($("<button class='copy copy-header' onclick='copyUrl(this)'> " +
+                "<img src='" + pathtoroot + "copy.svg' alt='" + messages.copyUrl + "'> " +
+                "<span data-copied='" + messages.urlCopied + "'></span></button>"));
+        },
+        function () {
+            $(this).find("button:last").remove();
+        }
+    );
+    $(window).on("orientationchange", collapse).on("resize", function(e) {
+        if (expanded && windowWidth !== window.innerWidth) collapse();
+    });
     var search = $("#search-input");
-    var reset = $("#reset-search");
+    var reset = $("#reset-button");
     search.catcomplete({
         minLength: 1,
         delay: 200,
-        source: function(request, response) {
-            reset.css("display", "inline");
-            if (request.term.trim() === "") {
-                return this.close();
-            }
-            return doSearch(request, response);
-        },
+        source: doSearch,
         response: function(event, ui) {
             if (!ui.content.length) {
                 ui.content.push({ l: messages.noResult });
             } else {
                 $("#search-input").empty();
             }
-        },
-        close: function(event, ui) {
-            reset.css("display", search.val() ? "inline" : "none");
-        },
-        change: function(event, ui) {
-            reset.css("display", search.val() ? "inline" : "none");
         },
         autoFocus: true,
         focus: function(event, ui) {
@@ -426,11 +457,9 @@ $(function() {
     });
     search.val('');
     search.prop("disabled", false);
-    search.attr("autocapitalize", "off");
     reset.prop("disabled", false);
     reset.click(function() {
         search.val('').focus();
-        reset.css("display", "none");
     });
     search.focus();
 });
