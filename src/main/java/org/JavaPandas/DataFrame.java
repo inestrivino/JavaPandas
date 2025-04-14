@@ -105,20 +105,45 @@ public class DataFrame implements DataFrameInterface{
     /*------AFFICHAGE------*/
     @Override
     public void showFirstLines(int n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showFirstLines'");
+        // Affiche l'entête
+        System.out.println(Arrays.toString(columnNames));
+        // Détermine le nombre de lignes à afficher (au max le nombre total de lignes)
+        int rows = data.get(columnNames[0]).size();
+        int limit = Math.min(n, rows);
+        for (int i = 0; i < limit; i++) {
+            for (String col : columnNames) {
+                System.out.print(data.get(col).get(i) + "\t");
+            }
+            System.out.println();
+        }
     }
 
     @Override
     public void showLastLines(int n) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showLastLines'");
+        // Affiche l'entête
+        System.out.println(Arrays.toString(columnNames));
+        int rows = data.get(columnNames[0]).size();
+        int start = Math.max(0, rows - n); // Si n > rows, commence à 0
+        for (int i = start; i < rows; i++) {
+            for (String col : columnNames) {
+                System.out.print(data.get(col).get(i) + "\t");
+            }
+            System.out.println();
+        }
     }
 
     @Override
     public void showDataFrame() {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'showLastLines'");
+        StringBuilder sb = new StringBuilder();
+        sb.append(Arrays.toString(columnNames)).append("\n");
+        int rows = data.get(columnNames[0]).size();
+        for (int i = 0; i < rows; i++) {
+            for (String col : columnNames) {
+                sb.append(data.get(col).get(i)).append("\t");
+            }
+            sb.append("\n");
+        }
+        System.out.println(sb.toString());
     }
 
     /*------ADDITION------*/
@@ -214,8 +239,8 @@ public class DataFrame implements DataFrameInterface{
         }
 
         //this way we guarantee the column holds one type of object
-        if (isDouble) return "double";
-        else if (isInt) return "int";
+        if (isInt) return "int";
+        else if (isDouble) return "double";
         else return "String";
     }
 
