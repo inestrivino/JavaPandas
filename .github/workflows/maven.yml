@@ -67,8 +67,9 @@ jobs:
 
         sudo apt-get install -y libxml2-utils
         cat target/site/jacoco/jacoco.xml
-        MISSED=$(xmllint --xpath 'string(//counter[@type="INSTRUCTION"]/@missed)' target/site/jacoco/jacoco.xml)
-        COVERED=$(xmllint --xpath 'string(//counter[@type="INSTRUCTION"]/@covered)' target/site/jacoco/jacoco.xml)
+        # Extract all missed and covered instructions
+        MISSED=$(xmllint --xpath 'sum(//counter[@type="INSTRUCTION"]/@missed)' target/site/jacoco/jacoco.xml)
+        COVERED=$(xmllint --xpath 'sum(//counter[@type="INSTRUCTION"]/@covered)' target/site/jacoco/jacoco.xml)
 
         echo "Missed instructions: $MISSED"
         echo "Covered instructions: $COVERED"
