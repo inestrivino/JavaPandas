@@ -8,7 +8,12 @@ on:
     branches:
       - 'main'
 
-# This workflow compiles the maven project, executes tests, checks code coverage, and deploys to a GitHub package. It does so for all branches.
+# This workflow:
+#   - compiles the maven project
+#   - executes tests
+#   - checks code coverage of tests
+#   - deploys to a GitHub package
+#   - deploys the updated gh website
 
 jobs:
   build:
@@ -54,7 +59,6 @@ jobs:
         distribution: 'temurin'
 
     # Checks what is the code coverage according to jacoco
-    # TODO update minimum code coverage to 80 when we start implementing the code
     - name: Verify Code Coverage
       id: coverage
       run: |
@@ -62,20 +66,37 @@ jobs:
         mvn jacoco:report
 
         sudo apt-get install -y libxml2-utils
+        cat target/site/jacoco/jacoco.xml
+        MISSED=$(xmllint --xpath 'string(//counter[@type="INSTRUCTION"]/@missed)' target/site/jacoco/jacoco.xml)
+        COVERED=$(xmllint --xpath 'string(//counter[@type="INSTRUCTION"]/@covered)' target/site/jacoco/jacoco.xml)
 
-        COVERAGE=$(xmllint --xpath 'string(//counter[@type="INSTRUCTION"]/@missed div //counter[@type="INSTRUCTION"]/@covered * 100)' target/site/jacoco/jacoco.xml | awk -F'.' '{print $1}')
+        echo "Missed instructions: $MISSED"
+        echo "Covered instructions: $COVERED"
+
+         if [ "$COVERED" -eq 0 ] && [ "$MISSED" -eq 0 ]; then
+          COVERAGE=100
+        elif [ "$COVERED" -eq 0 ]; then
+          COVERAGE=0
+        else
+          TOTAL=$((COVERED + MISSED))
+          COVERAGE=$(( (100 * COVERED) / TOTAL ))
+        fi
+
+        echo "Calculated code coverage is $COVERAGE%"
 
         if [ -z "$COVERAGE" ]; then
           echo "Failed to extract coverage percentage from JaCoCo report."
           exit 1
         fi
-        echo "Code coverage is $COVERAGE%"
-        if [ "$COVERAGE" -lt 0 ]; then 
+
+        if [ "$COVERAGE" -lt 80 ]; then
           echo "Code coverage percentage was too low, cannot continue."
           exit 1
         fi
+
         echo "coverage=$COVERAGE" >> $GITHUB_ENV
         echo "$COVERAGE" > coverage.txt
+
 
   deploy:
     runs-on: ubuntu-latest
@@ -102,7 +123,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
-  generer_site:
+  generates-site:
     name: Générer le site Maven
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
