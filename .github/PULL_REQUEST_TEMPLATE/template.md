@@ -5,9 +5,9 @@
 Veuillez inclure un résumé des modifications et de l'incident associé. Listez toutes les dépendances nécessaires pour ce changement.
 Type de Changement
 
-    Correction de bug
-    Nouvelle fonctionnalité
-    Mise à jour de la documentation
+- [ ] Correction de bug
+- [ ] Nouvelle fonctionnalité
+- [ ] Mise à jour de la documentation
 
 ## Liste de Vérification
 

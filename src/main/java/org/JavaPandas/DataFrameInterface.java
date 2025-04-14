@@ -6,7 +6,7 @@ public interface DataFrameInterface {
     public void showLastLines(int n);
     public void showDataFrame();
 
-    //Creation methods
+    //Addition methods
     public void addRow();
     public void addCol(String label);
 
