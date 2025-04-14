@@ -8,7 +8,12 @@ on:
     branches:
       - 'main'
 
-# This workflow compiles the maven project, executes tests, checks code coverage, and deploys to a GitHub package. It does so for all branches.
+# This workflow:
+#   - compiles the maven project
+#   - executes tests
+#   - checks code coverage of tests
+#   - deploys to a GitHub package
+#   - deploys the updated gh website
 
 jobs:
   build:
@@ -102,7 +107,7 @@ jobs:
       env:
         GITHUB_TOKEN: ${{ github.token }}
 
-  generer_site:
+  generates-site:
     name: Générer le site Maven
     if: github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
