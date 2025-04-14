@@ -59,7 +59,6 @@ jobs:
         distribution: 'temurin'
 
     # Checks what is the code coverage according to jacoco
-    # TODO update minimum code coverage to 80 when we start implementing the code
     - name: Verify Code Coverage
       id: coverage
       run: |
@@ -75,7 +74,7 @@ jobs:
           exit 1
         fi
         echo "Code coverage is $COVERAGE%"
-        if [ "$COVERAGE" -lt 0 ]; then 
+        if [ "$COVERAGE" -lt 80]; then 
           echo "Code coverage percentage was too low, cannot continue."
           exit 1
         fi
