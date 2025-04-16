@@ -127,5 +127,33 @@ public class DataFrameConstructueurTest {
         assertEquals("La colonne du nouveau DataFrame a les mêmes valeurs que la colonne source récupérée par son label",Arrays.asList(1, 2, 3), newData.get("col0"));
         assertEquals("La colonne du nouveau DataFrame a les mêmes valeurs que la colonne source récupérée par son label",Arrays.asList(10.5, 20.2, 30.3), newData.get("col2"));
     }
+
+    //construire un DataFrame à partir d'un fichier qui n'existe pas lève une RuntimeException
+    @Test(expected = RuntimeException.class)
+    public void testEmptyCsvThrowsException() throws IOException {
+        File emptyFile = File.createTempFile("empty", ".csv");
+        emptyFile.deleteOnExit();
+        new DataFrame(emptyFile.getAbsolutePath());
+    }
+
+    //construire un sous-DataFrame avec un label de colonne inexistant dans le DataFrame source lève une IllegalArgumentException
+    @Test(expected = IllegalArgumentException.class)
+    public void testUnknownColumnInConstructor() {
+        String[] types = {"int", "String"};
+        DataFrame df = new DataFrame(types);
+        df.getData().get("col0").add(1);
+        df.getData().get("col1").add("A");
+        new DataFrame(df, new String[]{"col0", "invalide"});
+    }
+
+    //construire un DataFrame avec plus de lignes que le DataFrame source lève une IndexOutOfBoundsException
+    @Test(expected = IndexOutOfBoundsException.class)
+    public void testOutOfBoundsIndexInConstructor() {
+        String[] types = {"int", "String"};
+        DataFrame df = new DataFrame(types);
+        df.getData().get("col0").add(1);
+        df.getData().get("col1").add("A");
+        new DataFrame(df, new int[]{0, 2});
+    }
 }
 
