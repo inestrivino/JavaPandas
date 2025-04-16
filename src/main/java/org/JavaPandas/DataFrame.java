@@ -15,7 +15,7 @@ public class DataFrame implements DataFrameInterface{
 
     /*------CONSTRUCTEURS------*/
     /**
-     * crée un dataframe avec les types des colonnes uniquement
+     * Crée un dataframe avec les types des colonnes uniquement.
      * @param columnTypes une liste de types
      */
     public DataFrame(String[] columnTypes) {
@@ -32,7 +32,7 @@ public class DataFrame implements DataFrameInterface{
     }
 
     /**
-     * Construit un DataFrame à partir d'un fichier CSV
+     * Construit un DataFrame à partir d'un fichier CSV.
      * @param csvName le chemin d'un fichier CSV
      */
     public DataFrame(String csvName) {
@@ -74,9 +74,9 @@ public class DataFrame implements DataFrameInterface{
     }
 
     /**
-     * crée un DataFrame à partir d'index de lignes d'un DataFrame source
-     *@param sourceFrame le DataFrame source
-     *@param indices une liste d'indices de lignes
+     * Crée un DataFrame à partir d'index de lignes d'un DataFrame source.
+     * @param sourceFrame le DataFrame source
+     * @param indices une liste d'indices de lignes
      */
     public DataFrame(DataFrame sourceFrame, int[] indices) {
         //on copie d'abord les noms de colonnes et types de colonnes de la frame source
@@ -96,9 +96,9 @@ public class DataFrame implements DataFrameInterface{
     }
 
     /**
-     * Crée un DataFrame à partir de labels de colonnes d'un DataFrame source
-     *@param sourceFrame le DataFrame source
-     *@param labels une liste de labels
+     * Crée un DataFrame à partir de labels de colonnes d'un DataFrame source.
+     * @param sourceFrame le DataFrame source
+     * @param labels une liste de labels
      */
     public DataFrame(DataFrame sourceFrame, String[] labels) {
         // Initialisation des noms et types de colonnes avec les labels passés en paramètre
@@ -117,11 +117,11 @@ public class DataFrame implements DataFrameInterface{
     }
 
     /*------AFFICHAGE------*/
-    @Override
     /**
-     * Affiche les n premières lignes d'un DataFrame
-     *@param n le nombre de lignes à afficher
+     * Affiche les n premières lignes d'un DataFrame.
+     * @param n le nombre de lignes à afficher
      */
+    @Override
     public void showFirstLines(int n) {
         // Affiche l'entête
         System.out.println(Arrays.toString(columnNames));
@@ -136,11 +136,11 @@ public class DataFrame implements DataFrameInterface{
         }
     }
 
-    @Override
     /**
-     * Affiche les n dernières lignes d'un DataFrame
-     *@param n le nombre de lignes à afficher
+     * Affiche les n dernières lignes d'un DataFrame.
+     * @param n le nombre de lignes à afficher
      */
+    @Override
     public void showLastLines(int n) {
         // Affiche le fin
         System.out.println(Arrays.toString(columnNames));
@@ -154,10 +154,10 @@ public class DataFrame implements DataFrameInterface{
         }
     }
 
-    @Override
     /**
-     * Affiche le DataFrame
+     * Affiche le DataFrame.
      */
+    @Override
     public void showDataFrame() {
         StringBuilder sb = new StringBuilder();
         sb.append(Arrays.toString(columnNames)).append("\n");
@@ -186,12 +186,12 @@ public class DataFrame implements DataFrameInterface{
 
     //STATISTICAL CALCULATION METHODS
 
-    @Override
     /**
-     * Réalise la somme des valeurs d'une colonne du DataFrame
-     *@param label le label de la colonne sur laquelle effectuer la somme
-     *@return la somme des valeurs de la colonne identifiée par label
+     * Réalise la somme des valeurs d'une colonne du DataFrame.
+     * @param label le label de la colonne sur laquelle effectuer la somme
+     * @return la somme des valeurs de la colonne identifiée par label
      */
+    @Override
     public double sum(String label) {
         List<Object> column = data.get(label);
         String type = getColumnType(label);
@@ -206,12 +206,12 @@ public class DataFrame implements DataFrameInterface{
     }
     
 
-    @Override
     /**
-     * Réalise la moyenne des valeurs d'une colonne du DataFrame
-     *@param label le label de la colonne sur laquelle effectuer la moyenne
-     *@return la moyenne des valeurs de la colonne identifiée par label
+     * Réalise la moyenne des valeurs d'une colonne du DataFrame.
+     * @param label le label de la colonne sur laquelle effectuer la moyenne
+     * @return la moyenne des valeurs de la colonne identifiée par label
      */
+    @Override
     public double mean(String label) {
         List<Object> column = data.get(label);
         String type = getColumnType(label);
@@ -227,12 +227,12 @@ public class DataFrame implements DataFrameInterface{
         return sum / column.size();
     }
 
-    @Override
     /**
-     * Réalise la somme cumulée d'une colonne du DataFrame
-     *@param label le label de la colonne sur laquelle effectuer la somme cumulée
-     *@return un nouveau DataFrame dont la colonne contient la somme cumulée
+     * Réalise la somme cumulée d'une colonne du DataFrame.
+     * @param label le label de la colonne sur laquelle effectuer la somme cumulée
+     * @return un nouveau DataFrame dont la colonne contient la somme cumulée
      */
+    @Override
     public DataFrame cumsum(String label) {
         List<Object> column = data.get(label);
         String type = getColumnType(label);
@@ -244,16 +244,20 @@ public class DataFrame implements DataFrameInterface{
         for (int i = 0; i < column.size(); i++) {
             cumulativeSum += ((Number) column.get(i)).doubleValue();
             dfCumsum.getData().get(label).set(i, cumulativeSum);
-        }
+        }/**
+     * Réalise la somme cumulée d'une colonne du DataFrame.
+     * @param label le label de la colonne sur laquelle effectuer la somme cumulée
+     * @return un nouveau DataFrame dont la colonne contient la somme cumulée
+     */
         return dfCumsum;
     }
 
-    @Override
     /**
-     * Réalise le produit cumulé d'une colonne du DataFrame
-     *@param label le label de la colonne sur laquelle effectuer la produit cumulé
-     *@return un nouveau DataFrame dont la colonne contient le produit cumulé
+     * Réalise le produit cumulé d'une colonne du DataFrame.
+     * @param label le label de la colonne sur laquelle effectuer la produit cumulé
+     * @return un nouveau DataFrame dont la colonne contient le produit cumulé
      */
+    @Override
     public DataFrame cumprod(String label) {
         List<Object> column = data.get(label);
         String type = getColumnType(label);
@@ -269,12 +273,12 @@ public class DataFrame implements DataFrameInterface{
         return dfCumprod;
     }
 
-    @Override
     /**
-     * Chercher la valeur maximale d'une colonne du DataFrame
-     *@param label le label de la colonne dans laquelle chercher la valeur maximale
-     *@return la valeur maximale de la colonne identifiée par label
+     * Chercher la valeur maximale d'une colonne du DataFrame.
+     * @param label le label de la colonne dans laquelle chercher la valeur maximale
+     * @return la valeur maximale de la colonne identifiée par label
      */
+    @Override
     public double max(String label) {
         List<Object> column = data.get(label);
         String type = getColumnType(label);
@@ -293,12 +297,12 @@ public class DataFrame implements DataFrameInterface{
         return max;
     }
 
-    @Override
     /**
-     * Chercher la valeur minimale d'une colonne du DataFrame
-     *@param label le label de la colonne dans laquelle chercher la valeur minimale
-     *@return la valeur minimale de la colonne identifiée par label
+     * Chercher la valeur minimale d'une colonne du DataFrame.
+     * @param label le label de la colonne dans laquelle chercher la valeur minimale
+     * @return la valeur minimale de la colonne identifiée par label
      */
+    @Override
     public double min(String label) {
         List<Object> column = data.get(label);
         String type = getColumnType(label);
@@ -322,21 +326,24 @@ public class DataFrame implements DataFrameInterface{
 
     /*-----GETTERS-----*/
     /**
-     * Get the names of columns
+     * Get the names of columns.
+     * @return un tableau de String contenant les labels des colonnes du DataFrame
      */
     public String[] getColumnNames(){
         return this.columnNames;
     }
 
     /**
-     * Get the types of columns
+     * Get the types of columns.
+     * @return un tableau de String contenant les types des colonnes du DataFrame
      */
     public String[] getColumnTypes(){
         return this.columnTypes;
     }
 
     /**
-     * Get the full data of the dataframe
+     * Get the full data of the dataframe.
+     * @return la table de hachage dans laquelle sont stockées les données du DataFrame
      */
     public Map<String, List<Object>> getData(){
         return this.data;
