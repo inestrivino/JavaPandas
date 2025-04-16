@@ -1,13 +1,14 @@
-#TODO: MAKE A PROJECT DEMO
+# Utiliser une image de base avec OpenJDK
+FROM openjdk:17-jdk-slim
 
-# We use an official OpenJDK runtime as a parent image
-FROM openjdk:19-jdk-slim
+# Définir le répertoire de travail dans le conteneur
+WORKDIR /app
 
-# Working directory
-WORKDIR /usr/src/demo
+# Copier tous les fichiers sources Java dans le conteneur
+COPY src/main/java/org/JavaPandas/DataFrame.java /app/src/main/java/org/JavaPandas/
 
-# We copy the application's JAR file to the container TODO
-# COPY COPY target/javapandas-1.0-SNAPSHOT.jar demo.jar .
+# Compiler le fichier Java
+RUN mkdir -p /app/src/main/java/org/JavaPandas && javac /app/src/main/java/org/JavaPandas/DataFrame.java
 
-# Command to run the demo when the container starts TODO
-# CMD ["java", "-jar", "JavaPandas.jar"]
+# Définir la commande par défaut pour exécuter le programme
+CMD ["java", "org.JavaPandas.DataFrame"]
