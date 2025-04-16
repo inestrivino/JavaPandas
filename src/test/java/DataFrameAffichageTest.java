@@ -36,7 +36,7 @@ public class DataFrameAffichageTest {
     }
 
     @Test
-    public void testShowFirstLines2() { //affichage de 0 lignes
+    public void testShowFirstLines1() { //affichage de 0 lignes
         System.setOut(new PrintStream(outContent));
         DataFrame df = creer_DataFrame();
         df.showFirstLines(0);
@@ -46,7 +46,7 @@ public class DataFrameAffichageTest {
     }
 
     @Test
-    public void testShowFirstLines3() { //affichage de plus de lignes que possible
+    public void testShowFirstLines2() { //affichage de plus de lignes que possible
         System.setOut(new PrintStream(outContent));
         DataFrame df = creer_DataFrame();
         df.showFirstLines(13);
@@ -71,7 +71,7 @@ public class DataFrameAffichageTest {
     }
 
     @Test
-    public void testShowLastLines() {
+    public void testShowLastLines() { //affiche les dernieres 2 lignes
         System.setOut(new PrintStream(outContent));
         DataFrame df = creer_DataFrame();
         df.showLastLines(2);

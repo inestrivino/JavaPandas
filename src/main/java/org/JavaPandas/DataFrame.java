@@ -120,7 +120,7 @@ public class DataFrame implements DataFrameInterface{
 
     @Override
     public void showLastLines(int n) {
-        // Affiche l'entête
+        // Affiche le fin
         System.out.println(Arrays.toString(columnNames));
         int rows = data.get(columnNames[0]).size();
         int start = Math.max(0, rows - n); // Si n > rows, commence à 0
