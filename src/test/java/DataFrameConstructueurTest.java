@@ -1,8 +1,8 @@
-import static org.junit.Assert.*;
 import org.junit.*;
+import static org.junit.Assert.*;
 import java.io.*;
 import java.util.*;
-import org.JavaPandas.DataFrame;
+import org.JavaPandas.*;
 
 public class DataFrameConstructueurTest {
 
@@ -10,12 +10,11 @@ public class DataFrameConstructueurTest {
     public void testConstructorWithTypes() {
         String[] types = {"int", "String", "double"};
         DataFrame df = new DataFrame(types);
-        assertNotNull(df);
+        assertNotNull("le DataFrame cree ne doit pas etre null",df);
     }
 
-    @Test
-    public void testConstructorFromCSV() throws IOException {
-        //crée un fichier temporaire CSV qui sera supprimé à la fin
+    //cree un fichier temporaire CSV supprime à la fin et construit un dataframe à partir de ce fichier
+    private DataFrame creer_dataframe_csv() throws IOException {
         File tempCsv = File.createTempFile("test", ".csv");
         FileWriter writer = new FileWriter(tempCsv);
         writer.write("id,name,score\n");
@@ -23,112 +22,135 @@ public class DataFrameConstructueurTest {
         writer.write("2,Leia,89.4\n");
         writer.write("3,Luke,76.0\n");
         writer.close();
-
-        //now we try to create the dataframe using the csv file
         DataFrame df = new DataFrame(tempCsv.getAbsolutePath());
-
-        assertNotNull("le DataFrame crée ne doit pas être null",df);
         tempCsv.delete();
+        return df;
+    }
+
+    @Test
+    public void testConstructorFromCSV1() throws IOException {
+        DataFrame df = creer_dataframe_csv();
+        assertNotNull("le DataFrame cree depuis un fichier csv existant ne doit pas etre null",df);
     }
 
     @Test
     public void testConstructorFromCSV2() throws IOException {
-        File tempCsv = File.createTempFile("test", ".csv");
-        FileWriter writer = new FileWriter(tempCsv);
-        writer.write("id,name,score\n");
-        writer.write("1,Han,95.2\n");
-        writer.write("2,Leia,89.4\n");
-        writer.write("3,Luke,76.0\n");
-        writer.close();
-
-        DataFrame df = new DataFrame(tempCsv.getAbsolutePath());
+        DataFrame df = creer_dataframe_csv();
         Map<String, List<Object>> data = df.getData();
-
-        assertEquals("le contenu de la colonne du DataFrame est le même que celui du fichier csv",Arrays.asList("Han", "Leia", "Luke"), data.get("name"));
-        assertEquals("le contenu de la colonne du DataFrame est le même que celui du fichier csv",Arrays.asList(95.2, 89.4, 76.0), data.get("score"));
-
-        tempCsv.delete();
+        assertEquals("le contenu de la colonne du DataFrame est le meme que celui du fichier csv",Arrays.asList(1, 2, 3), data.get("id"));
     }
 
     @Test
-    public void testConstructorFromIndices() {
+    public void testConstructorFromCSV3() throws IOException {
+        DataFrame df = creer_dataframe_csv();
+        Map<String, List<Object>> data = df.getData();
+        assertEquals("le contenu de la colonne du DataFrame est le meme que celui du fichier csv",Arrays.asList("Han", "Leia", "Luke"), data.get("name"));
+    }
+
+    @Test
+    public void testConstructorFromCSV4() throws IOException {
+        DataFrame df = creer_dataframe_csv();
+        Map<String, List<Object>> data = df.getData();
+        assertEquals("le contenu de la colonne du DataFrame est le meme que celui du fichier csv",Arrays.asList(95.2, 89.4, 76.0), data.get("score"));
+    }
+
+    private DataFrame creer_dataframe_indices(){
         String[] types = {"int", "String"};
         DataFrame df = new DataFrame(types);
-
         df.getData().get("col0").addAll(Arrays.asList(1, 2, 3));
         df.getData().get("col1").addAll(Arrays.asList("Han", "Leia", "Luke"));
-        DataFrame subset = new DataFrame(df, new int[]{0, 2});
+        return df;
+    }
 
-        assertEquals("Le nouveau DataFrame a le bon nombre de lignes",2, subset.getData().get("col0").size());
-        assertEquals("Le nouveau DataFrame a le bon nombre de colonnes",3, df.getData().get("col0").size());
-        assertEquals("Le nouveau DataFrame a le bon nombre de lignes",2, subset.getData().get("col1").size());
-        assertEquals("Le nouveau DataFrame a le bon nombre de colonnes",3, df.getData().get("col1").size());
+    @Test
+    public void testConstructorFromIndices1() {
+        DataFrame df = creer_dataframe_indices();
+        DataFrame subset = new DataFrame(df, new int[]{0, 2});
+        assertEquals("Le nouveau DataFrame a le bon nombre de lignes",df.getData().get("col0").size()-1,subset.getData().get("col0").size());
     }
 
     @Test
     public void testConstructorFromIndices2() {
-        String[] types = {"int", "String"};
-        DataFrame df = new DataFrame(types);
+        DataFrame df = creer_dataframe_indices();
+        DataFrame subset = new DataFrame(df, new int[]{0, 2});
+        assertEquals("Le nouveau DataFrame a le bon nombre de lignes",df.getData().get("col1").size()-1, subset.getData().get("col1").size());
+    }
 
-        df.getData().get("col0").addAll(Arrays.asList(1, 2, 3));
-        df.getData().get("col1").addAll(Arrays.asList("Han", "Leia", "Luke"));
-
+    @Test
+    public void testConstructorFromIndices3() {
+        DataFrame df = creer_dataframe_indices();
         DataFrame subset = new DataFrame(df, new int[]{0, 2});
         Map<String, List<Object>> subData = subset.getData();
-
         assertEquals("les valeurs des colonnes du nouveau DataFrame sont celles extraites du DataFrame source à partir des indices",Arrays.asList(1, 3), subData.get("col0"));
+    }
+
+    @Test
+    public void testConstructorFromIndices4() {
+        DataFrame df = creer_dataframe_indices();
+        DataFrame subset = new DataFrame(df, new int[]{0, 2});
+        Map<String, List<Object>> subData = subset.getData();
         assertEquals("les valeurs des colonnes du nouveau DataFrame sont celles extraites du DataFrame source à partir des indices",Arrays.asList("Han", "Luke"), subData.get("col1"));
+    }
+
+    private DataFrame creer_dataframe_labels(){
+        String[] types = {"int", "String", "double"};
+        DataFrame df = new DataFrame(types);
+        df.getData().get("col0").addAll(Arrays.asList(1, 2, 3));
+        df.getData().get("col1").addAll(Arrays.asList("Han", "Leia", "Luke"));
+        df.getData().get("col2").addAll(Arrays.asList(10.5, 20.2, 30.3));
+        return df;
     }
 
     @Test
     public void testConstructorFromLabels() {
-        String[] types = {"int", "String", "double"};
-        DataFrame df = new DataFrame(types);
-
-        df.getData().get("col0").addAll(Arrays.asList(1, 2, 3));
-        df.getData().get("col1").addAll(Arrays.asList("Han", "Leia", "Luke"));
-        df.getData().get("col2").addAll(Arrays.asList(10.5, 20.2, 30.3));
-
+        DataFrame df = creer_dataframe_labels();
         String[] labels = {"col0", "col2"};
         DataFrame newDf = new DataFrame(df, labels);
-
-        assertNotNull("le DataFrame créé ne doit pas être null",newDf);
+        assertNotNull("le DataFrame cree ne doit pas etre null",newDf);
     }
 
     public void testConstructorFromLabels1() {
-        String[] types = {"int", "String", "double"};
-        DataFrame df = new DataFrame(types);
-
-        df.getData().get("col0").addAll(Arrays.asList(1, 2, 3));
-        df.getData().get("col1").addAll(Arrays.asList("Han", "Leia", "Luke"));
-        df.getData().get("col2").addAll(Arrays.asList(10.5, 20.2, 30.3));
-
+        DataFrame df = creer_dataframe_labels();
         String[] labels = {"col0", "col2"};
         DataFrame newDf = new DataFrame(df, labels);
+        assertTrue("La nouvelle colonne a le bon label que la colonne source recuperee par son label",newDf.getData().containsKey("col0"));
+    }
 
-        assertTrue("La nouvelle colonne a le bon label que la colonne source récupérée par son label",newDf.getData().containsKey("col0"));
-        assertTrue("La nouvelle colonne a le bon label que la colonne source récupérée par son label",newDf.getData().containsKey("col2"));
-        assertFalse("La nouvelle colonne a le bon label que la colonne source récupérée par son label",newDf.getData().containsKey("col1"));
+    public void testConstructorFromLabels2() {
+        DataFrame df = creer_dataframe_labels();
+        String[] labels = {"col0", "col2"};
+        DataFrame newDf = new DataFrame(df, labels);
+        assertTrue("La nouvelle colonne a le bon label que la colonne source recuperee par son label",newDf.getData().containsKey("col2"));
+    }
+
+    public void testConstructorFromLabels3() {
+        DataFrame df = creer_dataframe_labels();
+        String[] labels = {"col0", "col2"};
+        DataFrame newDf = new DataFrame(df, labels);
+        assertFalse("La nouvelle colonne a le bon label que la colonne source recuperee par son label",newDf.getData().containsKey("col1"));
     }
 
     @Test
-    public void testConstructorFromLabels2() {
-        String[] types = {"int", "String", "double"};
-        DataFrame df = new DataFrame(types);
-
-        df.getData().get("col0").addAll(Arrays.asList(1, 2, 3));
-        df.getData().get("col1").addAll(Arrays.asList("Han", "Leia", "Luke"));
-        df.getData().get("col2").addAll(Arrays.asList(10.5, 20.2, 30.3));
-
+    public void testConstructorFromLabels4() {
+        DataFrame df = creer_dataframe_labels();
         String[] labels = {"col0", "col2"};
         DataFrame newDf = new DataFrame(df, labels);
         Map<String, List<Object>> newData = newDf.getData();
-
-        assertEquals("La colonne du nouveau DataFrame a les mêmes valeurs que la colonne source récupérée par son label",Arrays.asList(1, 2, 3), newData.get("col0"));
-        assertEquals("La colonne du nouveau DataFrame a les mêmes valeurs que la colonne source récupérée par son label",Arrays.asList(10.5, 20.2, 30.3), newData.get("col2"));
+        assertEquals("La colonne du nouveau DataFrame a les memes valeurs que la colonne source recuperee par son label",Arrays.asList(1, 2, 3), newData.get("col0"));
     }
 
-    //construire un DataFrame à partir d'un fichier qui n'existe pas lève une RuntimeException
+    @Test
+    public void testConstructorFromLabels5() {
+        DataFrame df = creer_dataframe_labels();
+        String[] labels = {"col0", "col2"};
+        DataFrame newDf = new DataFrame(df, labels);
+        Map<String, List<Object>> newData = newDf.getData();
+        assertEquals("La colonne du nouveau DataFrame a les memes valeurs que la colonne source recuperee par son label",Arrays.asList(10.5, 20.2, 30.3), newData.get("col2"));
+    }
+
+    /**
+     * construire un DataFrame à partir d'un fichier qui n'existe pas lève une RuntimeException
+    */
     @Test(expected = RuntimeException.class)
     public void testEmptyCsvThrowsException() throws IOException {
         File emptyFile = File.createTempFile("empty", ".csv");
@@ -136,7 +158,9 @@ public class DataFrameConstructueurTest {
         new DataFrame(emptyFile.getAbsolutePath());
     }
 
-    //construire un sous-DataFrame avec un label de colonne inexistant dans le DataFrame source lève une IllegalArgumentException
+    /**
+     * construire un sous-DataFrame avec un label de colonne inexistant dans le DataFrame source lève une IllegalArgumentException
+    */
     @Test(expected = IllegalArgumentException.class)
     public void testUnknownColumnInConstructor() {
         String[] types = {"int", "String"};
@@ -146,7 +170,9 @@ public class DataFrameConstructueurTest {
         new DataFrame(df, new String[]{"col0", "invalide"});
     }
 
-    //construire un DataFrame avec plus de lignes que le DataFrame source lève une IndexOutOfBoundsException
+    /**
+     * construire un DataFrame avec plus de lignes que le DataFrame source lève une IndexOutOfBoundsException
+     */
     @Test(expected = IndexOutOfBoundsException.class)
     public void testOutOfBoundsIndexInConstructor() {
         String[] types = {"int", "String"};
@@ -156,4 +182,3 @@ public class DataFrameConstructueurTest {
         new DataFrame(df, new int[]{0, 2});
     }
 }
-
