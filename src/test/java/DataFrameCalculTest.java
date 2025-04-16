@@ -296,19 +296,19 @@ public class DataFrameCalculTest {
     //max
 
     @Test
-    public void testMax1(){
+    public void testMaxInt(){
         DataFrame df = creer_DataFrame();
         assertEquals("le max de 1 2 3 est 3",3, df.max("col0"),0);
     }
 
     @Test
-    public void testMax2(){
+    public void testMaxDouble(){
         DataFrame df = creer_DataFrame();
         assertEquals("le max de 1.5, 2.5, 3.5 est 3.5",3.5, df.max("col1"),0);
     }
 
     @Test
-    public void testMax3(){
+    public void testMaxNegative(){
         DataFrame df = creer_DataFrame();
         df.getData().get("col0").clear();
         df.getData().get("col0").addAll(Arrays.asList(-5.0, -10.0, -15.0));
@@ -316,7 +316,7 @@ public class DataFrameCalculTest {
     }
 
     @Test
-    public void testMax4(){
+    public void testMaxNegativeAndPositive(){
         DataFrame df = creer_DataFrame();
         df.getData().get("col0").clear();
         df.getData().get("col0").addAll(Arrays.asList(-5.0, -10.0, 15.0));
@@ -325,21 +325,21 @@ public class DataFrameCalculTest {
 
     //appeler max sur une colonne d'un type non numérique doit renvoyer une IllegalArgumentException
     @Test(expected = IllegalArgumentException.class)
-    public void testMax5() {
+    public void testMaxNotNumeric() {
         DataFrame df = creer_DataFrame();
         df.max("col2");
     }
 
     //appeler max sur une colonne qui n'existe pas doit renvoyer une IllegalArgumentException
     @Test(expected = IllegalArgumentException.class)
-    public void testMax6() {
+    public void testMaxColInexistante() {
         DataFrame df = creer_DataFrame();
         df.max("inexistant");
     }
 
     //appeler max sur une colonne vide doit renvoyer une IllegalArgumentException
     @Test(expected = IllegalArgumentException.class)
-    public void testMax7() {
+    public void testMaxEmptyCol() {
         DataFrame df = creer_DataFrame();
         df.getData().get("col0").clear();
         df.max("col0");
@@ -348,19 +348,19 @@ public class DataFrameCalculTest {
     //min
 
     @Test
-    public void testMin1(){
+    public void testMinInt(){
         DataFrame df = creer_DataFrame();
         assertEquals("le min de 1, 2, 3 est 1",1, df.min("col0"),0);
     }
 
     @Test
-    public void testMin2(){
+    public void testMinDouble(){
         DataFrame df = creer_DataFrame();
         assertEquals("le min de 1.5, 2.5, 3.5 est 3.5 est 1.5",1.5, df.min("col1"),0);
     }
 
     @Test
-    public void testMin3(){
+    public void testMinNegative(){
         DataFrame df = creer_DataFrame();
         df.getData().get("col0").clear();
         df.getData().get("col0").addAll(Arrays.asList(-5.0, -10.0, -15.0));
@@ -368,7 +368,7 @@ public class DataFrameCalculTest {
     }
 
     @Test
-    public void testMin4(){
+    public void testMinNegativeAndPositive(){
         DataFrame df = creer_DataFrame();
         df.getData().get("col0").clear();
         df.getData().get("col0").addAll(Arrays.asList(-5.0, -10.0, 15.0));
@@ -377,21 +377,21 @@ public class DataFrameCalculTest {
 
     //appeler min sur une colonne d'un type non numérique doit renvoyer une IllegalArgumentException
     @Test(expected = IllegalArgumentException.class)
-    public void testMin5() {
+    public void testMinNotNumeric() {
         DataFrame df = creer_DataFrame();
         df.min("col2");
     }
 
     //appeler min sur une colonne qui n'existe pas doit renvoyer une IllegalArgumentException
     @Test(expected = IllegalArgumentException.class)
-    public void testMin6() {
+    public void testMinColInexistante() {
         DataFrame df = creer_DataFrame();
         df.min("inexistant");
     }
 
     //appeler min sur une colonne vide doit renvoyer une IllegalArgumentException
     @Test(expected = IllegalArgumentException.class)
-    public void testMin7() {
+    public void testMinEmptyCol() {
         DataFrame df = creer_DataFrame();
         df.getData().get("col0").clear();
         df.min("col0");
