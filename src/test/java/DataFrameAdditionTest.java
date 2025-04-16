@@ -69,10 +69,20 @@ public class DataFrameAdditionTest {
 
     @Test (expected = NumberFormatException.class)
     //test to check when the castColumn method cannot cast the values
-    public void testCastColumn() {
+    public void testCastColumn1() {
         DataFrame df = creerDataframe();
         List<String> rawCol = Arrays.asList("1", "2", "invalid");
         String type = "int";
+
+        df.addCol("Test", type, rawCol);
+    }
+
+    @Test (expected = NumberFormatException.class)
+    //test to check when the castColumn method cannot cast the values
+    public void testCastColumn2() {
+        DataFrame df = creerDataframe();
+        List<String> rawCol = Arrays.asList("1.0", "2.0", "invalid");
+        String type = "double";
 
         df.addCol("Test", type, rawCol);
     }

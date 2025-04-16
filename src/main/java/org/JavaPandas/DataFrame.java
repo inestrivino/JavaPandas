@@ -175,6 +175,10 @@ public class DataFrame implements DataFrameInterface{
 
     /*------ADDITION------*/
     @Override
+    /**
+    * Ajoute une nouvelle ligne au DataFrame.
+    * @param values un tableau de chaînes de caractères représentant les valeurs de la nouvelle ligne
+     */
     public void addRow(String[] values){
         if(values.length != columnNames.size()) throw new IllegalArgumentException("Number of values inputed must be the same as the number of columns");
         for(int i=0; i<values.length; i++){
@@ -187,7 +191,12 @@ public class DataFrame implements DataFrameInterface{
     }
 
     @Override
-    //adds columns into the dataframe, by using the name, type, and a string of values to insert
+    /**
+    * Ajoute une nouvelle colonne au DataFrame.
+    * @param label le label de la nouvelle colonne
+    * @param type le type de données des valeurs de la colonne (par exemple, "int", "double", "string")
+    * @param values une liste de chaînes de caractères représentant les valeurs de la nouvelle colonne
+     */
     public void addCol(String label, String type, List<String> values){
         //we create the values as they should be
         List<Object> realValues = castColumn(values, type);
@@ -339,7 +348,12 @@ public class DataFrame implements DataFrameInterface{
     }
 
     /*-----QUERY-----*/
-    //advanced selection method based on a condition
+    @Override
+    /**
+    * Effectue une requête sur le DataFrame en fonction d'une condition.
+    * @param condition la condition de la requête (par exemple, "age > 30")
+    * @return un nouveau DataFrame contenant les lignes qui satisfont la condition
+     */
     public DataFrame query(String condition){
         String[] parsedCondition = parseCondition(condition);
         String column1 = parsedCondition[0];
@@ -370,7 +384,7 @@ public class DataFrame implements DataFrameInterface{
                         result.addRow(elements);
                     }
                 } else if (val1 instanceof Double && val2 instanceof Double) {
-                    if ((Double) val1 == (Double) val2) {
+                    if (val1.equals((Double) val2)) {
                         String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
@@ -521,16 +535,25 @@ public class DataFrame implements DataFrameInterface{
     }
 
     /*-----GETTERS-----*/
-    //get the names of columns
+    @Override
+    /**
+     * Get the column names of the dataframe
+     * @return la liste des noms de colomnes dans le dataframe
+     */
     public List<String> getColumnNames(){
         return this.columnNames;
     }
 
-    //get the types of columns
+    @Override
+    /**
+     * Get the column types of the dataframe
+     * @return la liste des types de colomnes dans le dataframe
+     */
     public List<String> getColumnTypes(){
         return this.columnTypes;
     }
 
+    @Override
     /**
      * Get the full data of the dataframe.
      * @return la table de hachage dans laquelle sont stockées les données du DataFrame
