@@ -12,17 +12,54 @@
   - [Instalation et utilisation](#instalation-et-utilisation)
   - [Workflow et revue du code](#workflow-et-revue-du-code)
   - [Outils utilisés](#outils-utilisés)
-  - [Feedback](#feedback)
+  - [Déroulment du projet / Feedback sur les outils](#déroulment-du-projet--feedback-sur-les-outils)
   - [Documentation](#documentation)
 
 ## Fonctionnalités principales
 
-<!---Description of functionalities offered by our library--->
+- Création d'un DataFrame
+  - à partir d'une liste de types de colonnes
+  - à partir d'un fichier csv
+  - à partir d'index de lignes d'un DataFrame source
+  - à partir de labels de colonnes d'un DataFrame source
+- Affichage d'un DataFrame
+  - afficher les n premières lignes
+  - afficher les n dernières lignes
+  - afficher l'entièreté du contenu
+- Ajout de lignes et de colonnes dans un DataFrame
+- Opération statistiques sur un DataFrame
+  - somme des valeurs d'une colonne
+  - moyenne d'une colonne
+  - somme cumulée d'une colonne
+  - produit cumulé d'une colonne
+  - maximum d'une colonne
+  - minimum d'une colonne
+- Sélection des colonnes qui vérifient une condition booléenne
+- Récupérer les labels et les types des colonnes d'un DataFrame
+- Récupérer les données stockées dans un DataFrame
 
 ## Instalation et utilisation
 
-<!---How to install and use the library based on the public snapshot--->
-<!---In this section, include existing docker images with a description, and a link to where they are published--->
+Pour installer la bibliothèque à partir du snapshot public, suivez ces étapes :
+1. Ajouter la dépendance à votre projet Maven: Incluez la dépendance de la bibliothèque dans votre fichier pom.xml.
+```xml
+<dependencies>
+    <dependency>
+      <groupId>devops_projet</groupId>
+      <artifactId>javapandas</artifactId>
+      <version>1.0-SNAPSHOT</version>
+    </dependency>
+</dependencies>
+```
+2. Installer les dépendances: Exécutez la commande suivante pour installer les dépendances.
+```bash
+mvn install
+```
+
+Nous fournissons également des images Docker préconfigurées pour faciliter l'utilisation et comprobation de la bibliothèque. Voici l'images disponibles:
+```
+docker pull ghcr.io/inestrivino/javapandas-demo:latest
+```
 
 ## Workflow et revue du code
 
@@ -78,9 +115,17 @@ Une fois votre code soumis et après avoir passé tous les tests, il sera examin
 - [Docker](https://www.docker.com/) et [Github Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry): Utilisés pour créer et deployer l'image du demo du projet.
 - [Github Pages](https://pages.github.com/): Utilisé pour le site web et documentation du projet.
 
-## Feedback
+## Déroulment du projet / Feedback sur les outils
 
-<!---Description of our experience using the outils we chose for the project--->
+Certains des outils que nous avons décidé d'utiliser, comme Maven, nous étaient familiers et donc simples et fluides à utiliser. 
+
+En revanche, nous avons eu beaucoup de mal à maintenir le flux de travail intact en raison de notre inexpérience. Nous avons bien créé des branches de fonctionnalités pour toutes les fonctionnalités principales de la bibliothèque. Mais lors du développement, certaines feature branches ont fusionnées avec main puis laissées de côté et plus mises à jour. De plus, des branches ont parfois été créées à partir de ces branches plus à jour. Des conflits sont apparus lorsque nous avons voulu réaliser de nouvelles fusions. Par la suite, ces conflits ont été évités en s'assurant de créer les branches depuis la dernière version du projet, sur la branche main, et non depuis des feature branches précédement fusionnées et laissées à l'abandon.
+
+De plus, nous avons eu quelques difficultés à analyser le rapport JaCoCo pour garantir une couverture des tests acceptable, ainsi qu'à créer la démo Docker.
+
+Au cours du projet, nous nous sommes familiarisés avec la manière de suivre un flux de travail, de tirer le meilleur parti des actions, de toutes les fonctionnalités que GitHub offre pour le DevOps (par exemple, les règles sur les branches) et de Docker lui-même.
+
+Dans l'ensemble, bien qu'il y ait eu des difficultés, nous avons réussi à implémenter une bibliothèque fonctionnelle tout en utilisant les outils de CI/CD au mieux de nos capacités.
 
 ## Documentation
 
