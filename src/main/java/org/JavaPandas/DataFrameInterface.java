@@ -8,7 +8,7 @@ public interface DataFrameInterface {
     public void showDataFrame();
 
     //Addition methods
-    public void addRow(Object[] values);
+    public void addRow(String[] values);
     public void addCol(String label, String type, List<String> values);
 
     //Statistical calculation methods

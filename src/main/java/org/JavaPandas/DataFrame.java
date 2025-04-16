@@ -19,10 +19,10 @@ public class DataFrame implements DataFrameInterface{
      * @param columnTypes une liste de types
      */
     public DataFrame(List<String> columnTypes) {
-        this.columnTypes = columnTypes;
         this.data = new HashMap<>();
         
         //initialisation des noms de colonnes (nom générique col0, col1, ...)
+        this.columnTypes = new ArrayList<>(columnTypes.size());
         this.columnNames = new ArrayList<>(columnTypes.size());
         for (int i = 0; i < columnTypes.size(); i++) {
             String colName = "col" + i;
@@ -42,8 +42,10 @@ public class DataFrame implements DataFrameInterface{
             String headerLine = reader.readLine();
             if (headerLine == null) throw new RuntimeException("empty csv file");
 
+            this.columnNames = new ArrayList<>();
             //découpage de la ligne d'entête pour extraire les noms des colonnes
-            for(String s : headerLine.split(",")) this.columnNames.add(s);
+            String[] splitHeader = headerLine.split(",");
+            for(String s : splitHeader) this.columnNames.add(s);
             int numCols = this.columnNames.size();
             
             //pour stocker les données brutes de chaque colonne
@@ -64,7 +66,7 @@ public class DataFrame implements DataFrameInterface{
             //inférer les types des colonnes en fonction des données
             this.columnTypes = new ArrayList<>(numCols);
             for (int i = 0; i < numCols; i++) {
-                columnTypes.set(i, inferType(rawColumns.get(i)));  //d'abord inférer le type de chaque colonne
+                columnTypes.add(inferType(rawColumns.get(i)));  //d'abord inférer le type de chaque colonne
                 List<Object> typedCol = castColumn(rawColumns.get(i), columnTypes.get(i));  //cast des valeurs
                 data.put(columnNames.get(i), typedCol);  //mettre la colonne dans le dataframe
             }
@@ -111,7 +113,7 @@ public class DataFrame implements DataFrameInterface{
             if (!sourceFrame.getData().containsKey(columnNames.get(i))) { //erreur si le label n'existe pas
                 throw new IllegalArgumentException("Unknown column: " + columnNames.get(i)); 
             }
-            this.columnTypes.set(i, sourceFrame.getColumnType(columnNames.get(i)));  // Récupérer le type de la colonne
+            this.columnTypes.add(sourceFrame.getColumnType(columnNames.get(i)));  // Récupérer le type de la colonne
             this.data.put(columnNames.get(i), new ArrayList<>(sourceFrame.getData().get(columnNames.get(i))));  //copier les données
         }
     }
@@ -173,13 +175,14 @@ public class DataFrame implements DataFrameInterface{
 
     /*------ADDITION------*/
     @Override
-    public void addRow(Object[] values){
+    public void addRow(String[] values){
         if(values.length != columnNames.size()) throw new IllegalArgumentException("Number of values inputed must be the same as the number of columns");
         for(int i=0; i<values.length; i++){
-            if(!belongsInColumn(values, columnTypes.get(i))){
+            if(!belongsInColumn(values[i], columnTypes.get(i))){
                 throw new IllegalArgumentException("Cannot insert this element into this column");
             }
-            data.get(columnNames.get(i)).add(values[i]);
+            Object parsedValue = parseObject(values[i], columnTypes.get(i));
+            data.get(columnNames.get(i)).add(parsedValue);
         }
     }
 
@@ -337,7 +340,7 @@ public class DataFrame implements DataFrameInterface{
 
     /*-----QUERY-----*/
     //advanced selection method based on a condition
-    public void query(String condition){
+    public DataFrame query(String condition){
         String[] parsedCondition = parseCondition(condition);
         String column1 = parsedCondition[0];
         String column2 = parsedCondition[2];
@@ -346,58 +349,175 @@ public class DataFrame implements DataFrameInterface{
         columnsQuery.add(column2);
 
         //once parsed we apply the selection
-        int sizeToCheck = Math.min(data.get(column1).size(), data.get(column2).size());
+        int sizeToCheck = data.get(column1).size();
         DataFrame result = new DataFrame(this, columnsQuery);
+        for(String s : columnsQuery){
+            result.getData().get(s).clear();
+        }
 
         List<Object> column1Data = data.get(column1);
         List<Object> column2Data = data.get(column2);
 
         switch (parsedCondition[1]) {
             case "==":
-                for(int i=0; i<sizeToCheck; i++){
-                    if(column1Data.get(i)==column2Data.get(i)){
-                        Object[] elements = {column1Data.get(i), column2Data.get(i)};
+            for (int i = 0; i < sizeToCheck; i++) {
+                Object val1 = column1Data.get(i);
+                Object val2 = column2Data.get(i);
+
+                if (val1 instanceof Integer && val2 instanceof Integer) {
+                    if ((Integer) val1 == (Integer) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
+                } else if (val1 instanceof Double && val2 instanceof Double) {
+                    if ((Double) val1 == (Double) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                } 
+                else {
+                    throw new IllegalArgumentException("Incompatible types for comparison");
                 }
+            }
                 break;
             case "<":
-                for(int i=0; i<sizeToCheck; i++){
-                    if((Double)column1Data.get(i)<(Double)column2Data.get(i)){
-                        Object[] elements = {column1Data.get(i), column2Data.get(i)};
+            for (int i = 0; i < sizeToCheck; i++) {
+                Object val1 = column1Data.get(i);
+                Object val2 = column2Data.get(i);
+
+                if (val1 instanceof Integer && val2 instanceof Integer) {
+                    if ((Integer) val1 < (Integer) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                } else if (val1 instanceof Double && val2 instanceof Double) {
+                    if ((Double) val1 < (Double) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
                 }
+                else if (val1 instanceof Double && val2 instanceof Integer) {
+                    if ((Double) val1 < (Integer) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                }
+                else if (val1 instanceof Integer && val2 instanceof Double) {
+                    if ((Integer) val1 < (Double) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                } 
+                else {
+                    throw new IllegalArgumentException("Incompatible types for comparison");
+                }
+            }
                 break;
             case ">":
-                for(int i=0; i<sizeToCheck; i++){
-                    if((Double)column1Data.get(i)>(Double)column2Data.get(i)){
-                        Object[] elements = {column1Data.get(i), column2Data.get(i)};
+            for (int i = 0; i < sizeToCheck; i++) {
+                Object val1 = column1Data.get(i);
+                Object val2 = column2Data.get(i);
+
+                if (val1 instanceof Integer && val2 instanceof Integer) {
+                    if ((Integer) val1 > (Integer) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                } else if (val1 instanceof Double && val2 instanceof Double) {
+                    if ((Double) val1 > (Double) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
                 }
+                else if (val1 instanceof Double && val2 instanceof Integer) {
+                    if ((Double) val1 > (Integer) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                }
+                else if (val1 instanceof Integer && val2 instanceof Double) {
+                    if ((Integer) val1 > (Double) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                } 
+                else {
+                    throw new IllegalArgumentException("Incompatible types for comparison");
+                }
+            }
                 break;
             case "<=":
-                for(int i=0; i<sizeToCheck; i++){
-                    if((Double)column1Data.get(i)<=(Double)column2Data.get(i)){
-                        Object[] elements = {column1Data.get(i), column2Data.get(i)};
+            for (int i = 0; i < sizeToCheck; i++) {
+                Object val1 = column1Data.get(i);
+                Object val2 = column2Data.get(i);
+
+                if (val1 instanceof Integer && val2 instanceof Integer) {
+                    if ((Integer) val1 < (Integer) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
-                }  
-                break;
-            case ">=":
-                for(int i=0; i<sizeToCheck; i++){
-                    if((Double)column1Data.get(i)>=(Double)column2Data.get(i)){
-                        Object[] elements = {column1Data.get(i), column2Data.get(i)};
+                } else if (val1 instanceof Double && val2 instanceof Double) {
+                    if ((Double) val1 < (Double) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
                 }
+                else if (val1 instanceof Double && val2 instanceof Integer) {
+                    if ((Double) val1 < (Integer) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                }
+                else if (val1 instanceof Integer && val2 instanceof Double) {
+                    if ((Integer) val1 < (Double) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                } 
+                else {
+                    throw new IllegalArgumentException("Incompatible types for comparison");
+                }
+            }
+                break;
+            case ">=":
+            for (int i = 0; i < sizeToCheck; i++) {
+                Object val1 = column1Data.get(i);
+                Object val2 = column2Data.get(i);
+
+                if (val1 instanceof Integer && val2 instanceof Integer) {
+                    if ((Integer) val1 < (Integer) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                } else if (val1 instanceof Double && val2 instanceof Double) {
+                    if ((Double) val1 < (Double) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                }
+                else if (val1 instanceof Double && val2 instanceof Integer) {
+                    if ((Double) val1 < (Integer) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                }
+                else if (val1 instanceof Integer && val2 instanceof Double) {
+                    if ((Integer) val1 < (Double) val2) {
+                        String[] elements = {val1.toString(), val2.toString()};
+                        result.addRow(elements);
+                    }
+                } 
+                else {
+                    throw new IllegalArgumentException("Incompatible types for comparison");
+                }
+            }
                 break;
             default:
                 throw new IllegalArgumentException("Unsupported operator: " + parsedCondition[1]);
         }
 
         result.showDataFrame();
+        return result;
     }
 
     /*-----GETTERS-----*/
@@ -481,8 +601,28 @@ public class DataFrame implements DataFrameInterface{
         else return "String";
     }
 
-    private boolean belongsInColumn(Object value, String type){
-        return (value instanceof Integer && type.equals("int")) || (value instanceof Double && type.equals("double")) || (value instanceof String && type.equals("String"));
+    private boolean belongsInColumn(String value, String type){
+        boolean isInt = true;
+        boolean isDouble = true;
+
+        try {
+            Integer.parseInt(value);
+        } catch (NumberFormatException e) {
+            isInt = false;  //Si la conversion échoue, ce n'est pas un entier
+        }
+
+        try {
+            Double.parseDouble(value);
+        } catch (NumberFormatException e) {
+            isDouble = false;  //ce n'est pas un double
+        }
+        return (isInt && type.equals("int")) || (isDouble && type.equals("double")) || type.equals("String");
+    }
+
+    private Object parseObject(String value, String type){
+        if(type.equals("int")) return Integer.parseInt(value);
+        if(type.equals("double")) return Double.parseDouble(value);
+        return value;
     }
 
     //caste une colonne en fonction de son type

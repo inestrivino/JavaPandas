@@ -7,10 +7,7 @@ import org.JavaPandas.*;
 public class DataFrameConstructueurTest {
     @Test
     public void testConstructorWithTypes() {
-        List<String> columnTypes = new ArrayList<>();
-        columnTypes.add("int");
-        columnTypes.add("String");
-        columnTypes.add("double");
+        List<String> columnTypes = new ArrayList<>(Arrays.asList("int", "String", "double"));
         DataFrame df = new DataFrame(columnTypes);
         assertNotNull("le DataFrame cree ne doit pas etre null",df);
     }
