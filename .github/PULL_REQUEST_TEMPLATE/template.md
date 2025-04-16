@@ -8,6 +8,7 @@ Type de Changement
 - [ ] Correction de bug
 - [ ] Nouvelle fonctionnalité
 - [ ] Mise à jour de la documentation
+- [ ] Tests
 
 ## Liste de Vérification
 
