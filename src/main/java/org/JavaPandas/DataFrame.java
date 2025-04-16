@@ -452,24 +452,24 @@ public class DataFrame implements DataFrameInterface{
                 Object val2 = column2Data.get(i);
 
                 if (val1 instanceof Integer && val2 instanceof Integer) {
-                    if ((Integer) val1 < (Integer) val2) {
+                    if ((Integer) val1 <= (Integer) val2) {
                         String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
                 } else if (val1 instanceof Double && val2 instanceof Double) {
-                    if ((Double) val1 < (Double) val2) {
+                    if ((Double) val1 <= (Double) val2) {
                         String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
                 }
                 else if (val1 instanceof Double && val2 instanceof Integer) {
-                    if ((Double) val1 < (Integer) val2) {
+                    if ((Double) val1 <= (Integer) val2) {
                         String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
                 }
                 else if (val1 instanceof Integer && val2 instanceof Double) {
-                    if ((Integer) val1 < (Double) val2) {
+                    if ((Integer) val1 <= (Double) val2) {
                         String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
@@ -485,24 +485,24 @@ public class DataFrame implements DataFrameInterface{
                 Object val2 = column2Data.get(i);
 
                 if (val1 instanceof Integer && val2 instanceof Integer) {
-                    if ((Integer) val1 < (Integer) val2) {
+                    if ((Integer) val1 >= (Integer) val2) {
                         String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
                 } else if (val1 instanceof Double && val2 instanceof Double) {
-                    if ((Double) val1 < (Double) val2) {
+                    if ((Double) val1 >= (Double) val2) {
                         String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
                 }
                 else if (val1 instanceof Double && val2 instanceof Integer) {
-                    if ((Double) val1 < (Integer) val2) {
+                    if ((Double) val1 >= (Integer) val2) {
                         String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }
                 }
                 else if (val1 instanceof Integer && val2 instanceof Double) {
-                    if ((Integer) val1 < (Double) val2) {
+                    if ((Integer) val1 >= (Double) val2) {
                         String[] elements = {val1.toString(), val2.toString()};
                         result.addRow(elements);
                     }

@@ -13,6 +13,11 @@ public class DataFrameQueryTest {
         return new DataFrame(columnTypes);
     }
 
+    private DataFrame creerDataframe2(){
+        List<String> columnTypes = new ArrayList<>(Arrays.asList("double", "double", "double"));
+        return new DataFrame(columnTypes);
+    }
+
     @Test (expected = IllegalArgumentException.class)
     //test to see what happens if the condition has other than 3 words
     public void testQuery1(){
@@ -52,5 +57,109 @@ public class DataFrameQueryTest {
         df.addRow(newvalues);
         DataFrame queryResult = df.query("col0 < col1");
         assertEquals(new ArrayList<>(Arrays.asList(1)), queryResult.getData().get("col0"));
+    }
+
+    @Test
+    //test to see what happens when we do a query
+    public void testQuery6(){
+        DataFrame df = creerDataframe();
+        String[] values = {"1", "2", "3"};
+        df.addRow(values);
+        String[] newvalues = {"2", "1", "3"};
+        df.addRow(newvalues);
+        DataFrame queryResult = df.query("col0 > col1");
+        assertEquals(new ArrayList<>(Arrays.asList(2)), queryResult.getData().get("col0"));
+    }
+
+    @Test
+    //test to see what happens when we do a query
+    public void testQuery7(){
+        DataFrame df = creerDataframe();
+        String[] values = {"1", "2", "3"};
+        df.addRow(values);
+        String[] newvalues = {"2", "1", "3"};
+        df.addRow(newvalues);
+        DataFrame queryResult = df.query("col0 == col1");
+        assertEquals(new ArrayList<>(), queryResult.getData().get("col0"));
+    }
+
+    @Test
+    //test to see what happens when we do a query
+    public void testQuery8(){
+        DataFrame df = creerDataframe();
+        String[] values = {"1", "2", "3"};
+        df.addRow(values);
+        String[] newvalues = {"2", "1", "3"};
+        df.addRow(newvalues);
+        DataFrame queryResult = df.query("col0 <= col1");
+        assertEquals(new ArrayList<>(Arrays.asList(1)), queryResult.getData().get("col0"));
+    }
+
+    @Test
+    //test to see what happens when we do a query
+    public void testQuery9(){
+        DataFrame df = creerDataframe();
+        String[] values = {"1", "2", "3"};
+        df.addRow(values);
+        String[] newvalues = {"2", "1", "3"};
+        df.addRow(newvalues);
+        DataFrame queryResult = df.query("col0 >= col1");
+        assertEquals(new ArrayList<>(Arrays.asList(2)), queryResult.getData().get("col0"));
+    }
+
+    @Test
+    //test to see what happens when we do a query
+    public void testQuery10(){
+        DataFrame df = creerDataframe2();
+        String[] values = {"1.0", "2.0", "3.0"};
+        df.addRow(values);
+        String[] newvalues = {"2.0", "1.0", "3.0"};
+        df.addRow(newvalues);
+        DataFrame queryResult = df.query("col0 > col1");
+        assertEquals(new ArrayList<>(Arrays.asList(2.0)), queryResult.getData().get("col0"));
+    }
+    @Test
+    //test to see what happens when we do a query
+    public void testQuery11(){
+        DataFrame df = creerDataframe2();
+        String[] values = {"1.0", "2.0", "3.0"};
+        df.addRow(values);
+        String[] newvalues = {"2.0", "1.0", "3.0"};
+        df.addRow(newvalues);
+        DataFrame queryResult = df.query("col0 < col1");
+        assertEquals(new ArrayList<>(Arrays.asList(1.0)), queryResult.getData().get("col0"));
+    }
+    @Test
+    //test to see what happens when we do a query
+    public void testQuery12(){
+        DataFrame df = creerDataframe2();
+        String[] values = {"1.0", "2.0", "3.0"};
+        df.addRow(values);
+        String[] newvalues = {"2.0", "1.0", "3.0"};
+        df.addRow(newvalues);
+        DataFrame queryResult = df.query("col0 >= col1");
+        assertEquals(new ArrayList<>(Arrays.asList(2.0)), queryResult.getData().get("col0"));
+    }
+    @Test
+    //test to see what happens when we do a query
+    public void testQuery13(){
+        DataFrame df = creerDataframe2();
+        String[] values = {"1.0", "2.0", "3.0"};
+        df.addRow(values);
+        String[] newvalues = {"2.0", "1.0", "3.0"};
+        df.addRow(newvalues);
+        DataFrame queryResult = df.query("col0 <= col1");
+        assertEquals(new ArrayList<>(Arrays.asList(1.0)), queryResult.getData().get("col0"));
+    }
+    @Test
+    //test to see what happens when we do a query
+    public void testQuery14(){
+        DataFrame df = creerDataframe2();
+        String[] values = {"1.0", "2.0", "3.0"};
+        df.addRow(values);
+        String[] newvalues = {"2.0", "1.0", "3.0"};
+        df.addRow(newvalues);
+        DataFrame queryResult = df.query("col0 == col1");
+        assertEquals(new ArrayList<>(), queryResult.getData().get("col0"));
     }
 }
