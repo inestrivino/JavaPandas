@@ -1,5 +1,7 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
+
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -7,9 +9,8 @@ import org.JavaPandas.DataFrame;
 import org.junit.Test;
 
 public class DataFrameCalculTest {
-
     private DataFrame creer_DataFrame(){
-        String[] types = {"int", "double", "String"};
+        List<String> types = new ArrayList<>(Arrays.asList("int", "double", "String"));
         DataFrame df = new DataFrame(types);
         df.getData().get("col0").addAll(Arrays.asList(1, 2, 3));
         df.getData().get("col1").addAll(Arrays.asList(1.5, 2.5, 3.5));
@@ -201,14 +202,14 @@ public class DataFrameCalculTest {
 
     @Test
     public void testCumsumEmptyColumn() {
-        DataFrame emptyDf = new DataFrame(new String[] {"int"});
+        DataFrame emptyDf = new DataFrame(new ArrayList<>(Arrays.asList("int")));
         DataFrame result = emptyDf.cumsum("col0");
         assertTrue(result.getData().get("col0").isEmpty());
     }
 
     @Test
     public void testCumsumEmptyColumn2() {
-        DataFrame emptyDf = new DataFrame(new String[] {"int"});
+        DataFrame emptyDf = new DataFrame(new ArrayList<>(Arrays.asList("int")));
         List<Object> expected = Arrays.asList();
         assertEquals("cumsum sur une colonne vide doit renvoyer un Dataframe dont la colonne est vide",expected, emptyDf.cumsum("col0").getData().get("col0"));
     }
@@ -281,14 +282,14 @@ public class DataFrameCalculTest {
 
     @Test
     public void testCumprodEmptyColumn() {
-        DataFrame emptyDf = new DataFrame(new String[] {"int"});
+        DataFrame emptyDf = new DataFrame(new ArrayList<>(Arrays.asList("int")));
         DataFrame result = emptyDf.cumprod("col0");
         assertTrue(result.getData().get("col0").isEmpty());
     }
 
     @Test
     public void testCumprodEmptyColumn2() {
-        DataFrame emptyDf = new DataFrame(new String[] {"int"});
+        DataFrame emptyDf = new DataFrame(new ArrayList<>(Arrays.asList("int")));
         List<Object> expected = Arrays.asList();
         assertEquals("cumprod sur une colonne vide doit renvoyer un Dataframe dont la colonne est vide",expected, emptyDf.cumprod("col0").getData().get("col0"));
     }
