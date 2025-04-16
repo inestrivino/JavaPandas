@@ -4,7 +4,7 @@ import java.io.*;
 import java.util.*;
 import org.JavaPandas.DataFrame;
 
-public class DataFrameTest {
+public class DataFrameConstructueurTest {
 
     @Test
     public void testConstructorWithTypes() {
@@ -126,66 +126,6 @@ public class DataFrameTest {
 
         assertEquals("La colonne du nouveau DataFrame a les mêmes valeurs que la colonne source récupérée par son label",Arrays.asList(1, 2, 3), newData.get("col0"));
         assertEquals("La colonne du nouveau DataFrame a les mêmes valeurs que la colonne source récupérée par son label",Arrays.asList(10.5, 20.2, 30.3), newData.get("col2"));
-    }
-
-    @Test
-    public void testAddRow() {
-        DataFrame df = new DataFrame(new String[]{"int"});
-        assertThrows(UnsupportedOperationException.class, df::addRow);
-    }
-
-    @Test
-    public void testAddCol() {
-        DataFrame df = new DataFrame(new String[]{"int"});
-        assertThrows(UnsupportedOperationException.class, () -> df.addCol("newCol"));
-    }
-
-    @Test
-    public void testShowFirstLines() {
-        DataFrame df = new DataFrame(new String[]{"int"});
-        assertThrows(UnsupportedOperationException.class, () -> df.showFirstLines(5));
-    }
-
-    @Test
-    public void testShowLastLines() {
-        DataFrame df = new DataFrame(new String[]{"int"});
-        assertThrows(UnsupportedOperationException.class, () -> df.showLastLines(5));
-    }
-
-    @Test
-    public void testShowDataFrame() {
-        DataFrame df = new DataFrame(new String[]{"int"});
-        assertThrows(UnsupportedOperationException.class, df::showDataFrame);
-    }
-
-    @Test
-    public void testSum() {
-        DataFrame df = new DataFrame(new String[]{"int"});
-        assertThrows(UnsupportedOperationException.class, () -> df.sum("label"));
-    }
-
-    @Test
-    public void testMean() {
-        DataFrame df = new DataFrame(new String[]{"int"});
-        assertThrows(UnsupportedOperationException.class, () -> df.mean("label"));
-    }
-
-    @Test
-    public void testQuantile() {
-        DataFrame df = new DataFrame(new String[]{"int"});
-        assertThrows(UnsupportedOperationException.class, () -> df.quantile("label"));
-    }
-
-    @Test
-    public void testCumsum() {
-        DataFrame df = new DataFrame(new String[]{"int"});
-        assertThrows(UnsupportedOperationException.class, () -> df.cumsum("label"));
-    }
-
-    @Test
-    public void testCumprod() {
-        DataFrame df = new DataFrame(new String[]{"int"});
-        assertThrows(UnsupportedOperationException.class, () -> df.cumprod("label"));
     }
 }
 
