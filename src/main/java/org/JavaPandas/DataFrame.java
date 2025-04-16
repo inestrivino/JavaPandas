@@ -14,10 +14,7 @@ public class DataFrame implements DataFrameInterface{
     private String[] columnTypes;
 
     /*------CONSTRUCTEURS------*/
-    /**
-     * crée un dataframe avec les types des colonnes uniquement
-     * @param columnTypes une liste de types
-     */
+    //crée un dataframe avec les types des colonnes uniquement
     public DataFrame(String[] columnTypes) {
         this.columnTypes = columnTypes;
         this.data = new HashMap<>();
@@ -31,10 +28,7 @@ public class DataFrame implements DataFrameInterface{
         }
     }
 
-    /**
-     * Construit un DataFrame à partir d'un fichier CSV
-     * @param csvName le chemin d'un fichier CSV
-     */
+    //charge un DataFrame depuis un fichier CSV
     public DataFrame(String csvName) {
         data = new HashMap<>();
         try (BufferedReader reader = new BufferedReader(new FileReader(csvName))) {
@@ -69,15 +63,11 @@ public class DataFrame implements DataFrameInterface{
                 data.put(columnNames[i], typedCol);  //mettre la colonne dans le dataframe
             }
         } catch (IOException e) {
-            throw new RuntimeException("Erreur CSV", e);
+            e.printStackTrace();
         }
     }
 
-    /**
-     * crée un DataFrame à partir d'index de lignes d'un DataFrame source
-     *@param sourceFrame le DataFrame source
-     *@param indices une liste d'indices de lignes
-     */
+    //crée un DataFrame à partir d'un sous-ensemble de lignes (index)
     public DataFrame(DataFrame sourceFrame, int[] indices) {
         //on copie d'abord les noms de colonnes et types de colonnes de la frame source
         this.columnNames = sourceFrame.getColumnNames();
@@ -95,11 +85,7 @@ public class DataFrame implements DataFrameInterface{
         }
     }
 
-    /**
-     * Crée un DataFrame à partir de labels de colonnes d'un DataFrame source
-     *@param sourceFrame le DataFrame source
-     *@param labels une liste de labels
-     */
+    //Crée un DataFrame à partir d'un sous-ensemble de colonnes (labels)
     public DataFrame(DataFrame sourceFrame, String[] labels) {
         // Initialisation des noms et types de colonnes avec les labels passés en paramètre
         this.columnNames = labels;
@@ -118,10 +104,6 @@ public class DataFrame implements DataFrameInterface{
 
     /*------AFFICHAGE------*/
     @Override
-    /**
-     * Affiche les n premières lignes d'un DataFrame
-     *@param n le nombre de lignes à afficher
-     */
     public void showFirstLines(int n) {
         // Affiche l'entête
         System.out.println(Arrays.toString(columnNames));
@@ -137,10 +119,6 @@ public class DataFrame implements DataFrameInterface{
     }
 
     @Override
-    /**
-     * Affiche les n dernières lignes d'un DataFrame
-     *@param n le nombre de lignes à afficher
-     */
     public void showLastLines(int n) {
         // Affiche le fin
         System.out.println(Arrays.toString(columnNames));
@@ -155,9 +133,6 @@ public class DataFrame implements DataFrameInterface{
     }
 
     @Override
-    /**
-     * Affiche le DataFrame
-     */
     public void showDataFrame() {
         StringBuilder sb = new StringBuilder();
         sb.append(Arrays.toString(columnNames)).append("\n");
@@ -185,159 +160,50 @@ public class DataFrame implements DataFrameInterface{
     }
 
     //STATISTICAL CALCULATION METHODS
-
     @Override
-    /**
-     * Réalise la somme des valeurs d'une colonne du DataFrame
-     *@param label le label de la colonne sur laquelle effectuer la somme
-     *@return la somme des valeurs de la colonne identifiée par label
-     */
-    public double sum(String label) {
-        List<Object> column = data.get(label);
-        String type = getColumnType(label);
-        if (type == null || (!type.equals("int") && !type.equals("double"))) {
-            throw new IllegalArgumentException("Column must be numeric (int or double).");
-        }
-        double sum = 0.0;
-        for (Object value : column) {
-            sum += ((Number) value).doubleValue();
-        }
-        return sum;
-    }
-    
-
-    @Override
-    /**
-     * Réalise la moyenne des valeurs d'une colonne du DataFrame
-     *@param label le label de la colonne sur laquelle effectuer la moyenne
-     *@return la moyenne des valeurs de la colonne identifiée par label
-     */
-    public double mean(String label) {
-        List<Object> column = data.get(label);
-        String type = getColumnType(label);
-        if (type == null || (!type.equals("int") && !type.equals("double"))) {
-            throw new IllegalArgumentException("Column must be numeric (int or double).");
-        }
-        if(column.size() == 0)
-            return 0.0;
-        double sum = 0.0;
-        for (Object value : column) {
-            sum += ((Number) value).doubleValue();
-        }
-        return sum / column.size();
+    public void sum(String label) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'sum'");
     }
 
     @Override
-    /**
-     * Réalise la somme cumulée d'une colonne du DataFrame
-     *@param label le label de la colonne sur laquelle effectuer la somme cumulée
-     *@return un nouveau DataFrame dont la colonne contient la somme cumulée
-     */
-    public DataFrame cumsum(String label) {
-        List<Object> column = data.get(label);
-        String type = getColumnType(label);
-        if (type == null || (!type.equals("int") && !type.equals("double"))) {
-            throw new IllegalArgumentException("Column must be numeric (int or double).");
-        }
-        DataFrame dfCumsum = new DataFrame(this, getColumnNames());
-        double cumulativeSum = 0.0;
-        for (int i = 0; i < column.size(); i++) {
-            cumulativeSum += ((Number) column.get(i)).doubleValue();
-            dfCumsum.getData().get(label).set(i, cumulativeSum);
-        }
-        return dfCumsum;
+    public void mean(String label) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'mean'");
     }
 
     @Override
-    /**
-     * Réalise le produit cumulé d'une colonne du DataFrame
-     *@param label le label de la colonne sur laquelle effectuer la produit cumulé
-     *@return un nouveau DataFrame dont la colonne contient le produit cumulé
-     */
-    public DataFrame cumprod(String label) {
-        List<Object> column = data.get(label);
-        String type = getColumnType(label);
-        if (type == null || (!type.equals("int") && !type.equals("double"))) {
-            throw new IllegalArgumentException("Column must be numeric (int or double).");
-        }
-        DataFrame dfCumprod = new DataFrame(this, getColumnNames());
-        double cumulativeProd = 1.0;
-        for (int i = 0; i < column.size(); i++) {
-            cumulativeProd *= ((Number) column.get(i)).doubleValue();
-            dfCumprod.getData().get(label).set(i, cumulativeProd);
-        }
-        return dfCumprod;
+    public void quantile(String label) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'quantile'");
     }
 
     @Override
-    /**
-     * Chercher la valeur maximale d'une colonne du DataFrame
-     *@param label le label de la colonne dans laquelle chercher la valeur maximale
-     *@return la valeur maximale de la colonne identifiée par label
-     */
-    public double max(String label) {
-        List<Object> column = data.get(label);
-        String type = getColumnType(label);
-        if (type == null || (!type.equals("int") && !type.equals("double"))) {
-            throw new IllegalArgumentException("Column must be numeric (int or double).");
-        }
-        if(column.size() == 0)
-            throw new IllegalArgumentException("Column must not be empty");
-        double max = ((Number) column.get(0)).doubleValue();
-        double courant = 0;
-        for (int i = 0; i < column.size(); i++) {
-            courant = ((Number) column.get(i)).doubleValue();
-            if(courant>max)
-                max=courant;
-        }
-        return max;
+    public void cumsum(String label) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'cumsum'");
     }
 
     @Override
-    /**
-     * Chercher la valeur minimale d'une colonne du DataFrame
-     *@param label le label de la colonne dans laquelle chercher la valeur minimale
-     *@return la valeur minimale de la colonne identifiée par label
-     */
-    public double min(String label) {
-        List<Object> column = data.get(label);
-        String type = getColumnType(label);
-        if (type == null || (!type.equals("int") && !type.equals("double"))) {
-            throw new IllegalArgumentException("Column must be numeric (int or double).");
-        }
-        //colonne vide
-        if(column.size() == 0)
-            throw new IllegalArgumentException("Column must not be empty");
-        double min = ((Number) column.get(0)).doubleValue();
-        double courant = 0;
-        for (int i = 0; i < column.size(); i++) {
-            courant = ((Number) column.get(i)).doubleValue();
-            if(courant<min)
-                min=courant;
-        }
-        return min;
+    public void cumprod(String label) {
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'cumprod'");
     }
 
     //TODO: Mechanism for advanced selection
 
     /*-----GETTERS-----*/
-    /**
-     * Get the names of columns
-     */
+    //get the names of columns
     public String[] getColumnNames(){
         return this.columnNames;
     }
 
-    /**
-     * Get the types of columns
-     */
+    //get the types of columns
     public String[] getColumnTypes(){
         return this.columnTypes;
     }
 
-    /**
-     * Get the full data of the dataframe
-     */
+    //get the full data of the dataframe
     public Map<String, List<Object>> getData(){
         return this.data;
     }
