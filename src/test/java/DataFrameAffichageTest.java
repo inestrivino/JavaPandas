@@ -2,7 +2,11 @@ import static org.junit.Assert.assertEquals;
 
 import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+
+import javax.xml.crypto.Data;
 
 import org.JavaPandas.DataFrame;
 import org.junit.Test;
@@ -62,8 +66,11 @@ public class DataFrameAffichageTest {
     }
 
     private DataFrame creer_DataFrame(){
-        String[] types = {"int", "String", "double"};
-        DataFrame df = new DataFrame(types);
+        List<String> columnTypes = new ArrayList<>();
+        columnTypes.add("int");
+        columnTypes.add("String");
+        columnTypes.add("double");
+        DataFrame df = new DataFrame(columnTypes);
         df.getData().get("col0").addAll(Arrays.asList(1, 2, 3, 4, 5));
         df.getData().get("col1").addAll(Arrays.asList("A", "B", "C", "D", "E"));
         df.getData().get("col2").addAll(Arrays.asList(10.1, 20.2, 30.3, 40.4, 50.5));
