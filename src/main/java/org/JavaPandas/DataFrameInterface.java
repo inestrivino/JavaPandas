@@ -11,8 +11,8 @@ public interface DataFrameInterface {
     public void addCol(String label);
 
     //Statistical calculation methods
-    public void sum(String label);
-    public void mean(String label);
+    public double sum(String label);
+    public double mean(String label);
     public void quantile(String label);
     public void cumsum(String label);
     public void cumprod(String label);

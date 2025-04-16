@@ -161,15 +161,34 @@ public class DataFrame implements DataFrameInterface{
 
     //STATISTICAL CALCULATION METHODS
     @Override
-    public void sum(String label) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'sum'");
+    public double sum(String label) {
+        List<Object> column = data.get(label);
+        String type = getColumnType(label);
+        if (type == null || (!type.equals("int") && !type.equals("double"))) {
+            throw new IllegalArgumentException("Column must be numeric (int or double).");
+        }
+        double sum = 0.0;
+        for (Object value : column) {
+            sum += ((Number) value).doubleValue();
+        }
+        return sum;
     }
+    
 
     @Override
-    public void mean(String label) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'mean'");
+    public double mean(String label) {
+        List<Object> column = data.get(label);
+        String type = getColumnType(label);
+        if (type == null || (!type.equals("int") && !type.equals("double"))) {
+            throw new IllegalArgumentException("Column must be numeric (int or double).");
+        }
+        if(column.size() == 0)
+            return 0.0;
+        double sum = 0.0;
+        for (Object value : column) {
+            sum += ((Number) value).doubleValue();
+        }
+        return sum / column.size();
     }
 
     @Override
