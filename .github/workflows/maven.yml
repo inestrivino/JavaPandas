@@ -66,20 +66,38 @@ jobs:
         mvn jacoco:report
 
         sudo apt-get install -y libxml2-utils
+        cat target/site/jacoco/jacoco.xml
+        # Extract all missed and covered instructions
+        MISSED=$(xmllint --xpath 'sum(//counter[@type="INSTRUCTION"]/@missed)' target/site/jacoco/jacoco.xml)
+        COVERED=$(xmllint --xpath 'sum(//counter[@type="INSTRUCTION"]/@covered)' target/site/jacoco/jacoco.xml)
 
-        COVERAGE=$(xmllint --xpath 'string(//counter[@type="INSTRUCTION"]/@missed div //counter[@type="INSTRUCTION"]/@covered * 100)' target/site/jacoco/jacoco.xml | awk -F'.' '{print $1}')
+        echo "Missed instructions: $MISSED"
+        echo "Covered instructions: $COVERED"
+
+         if [ "$COVERED" -eq 0 ] && [ "$MISSED" -eq 0 ]; then
+          COVERAGE=100
+        elif [ "$COVERED" -eq 0 ]; then
+          COVERAGE=0
+        else
+          TOTAL=$((COVERED + MISSED))
+          COVERAGE=$(( (100 * COVERED) / TOTAL ))
+        fi
+
+        echo "Calculated code coverage is $COVERAGE%"
 
         if [ -z "$COVERAGE" ]; then
           echo "Failed to extract coverage percentage from JaCoCo report."
           exit 1
         fi
-        echo "Code coverage is $COVERAGE%"
-        if [ "$COVERAGE" -lt 80]; then 
+
+        if [ "$COVERAGE" -lt 80 ]; then
           echo "Code coverage percentage was too low, cannot continue."
           exit 1
         fi
+
         echo "coverage=$COVERAGE" >> $GITHUB_ENV
         echo "$COVERAGE" > coverage.txt
+
 
   deploy:
     runs-on: ubuntu-latest
