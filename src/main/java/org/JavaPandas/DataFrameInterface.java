@@ -12,9 +12,10 @@ public interface DataFrameInterface {
     public void addCol(String label, String type, List<String> values);
 
     //Statistical calculation methods
-    public void sum(String label);
-    public void mean(String label);
-    public void quantile(String label);
-    public void cumsum(String label);
-    public void cumprod(String label);
+    public double sum(String label);
+    public double mean(String label);
+    public DataFrame cumsum(String label);
+    public DataFrame cumprod(String label);
+    public double max(String label);
+    public double min(String label);
 }

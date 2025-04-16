@@ -5,11 +5,13 @@ import java.util.*;
 import org.JavaPandas.*;
 
 public class DataFrameConstructueurTest {
-
     @Test
     public void testConstructorWithTypes() {
-        String[] types = {"int", "String", "double"};
-        DataFrame df = new DataFrame(types);
+        List<String> columnTypes = new ArrayList<>();
+        columnTypes.add("int");
+        columnTypes.add("String");
+        columnTypes.add("double");
+        DataFrame df = new DataFrame(columnTypes);
         assertNotNull("le DataFrame cree ne doit pas etre null",df);
     }
 
@@ -55,8 +57,10 @@ public class DataFrameConstructueurTest {
     }
 
     private DataFrame creer_dataframe_indices(){
-        String[] types = {"int", "String"};
-        DataFrame df = new DataFrame(types);
+        List<String> columnTypes = new ArrayList<>();
+        columnTypes.add("int");
+        columnTypes.add("String");
+        DataFrame df = new DataFrame(columnTypes);
         df.getData().get("col0").addAll(Arrays.asList(1, 2, 3));
         df.getData().get("col1").addAll(Arrays.asList("Han", "Leia", "Luke"));
         return df;
@@ -93,8 +97,8 @@ public class DataFrameConstructueurTest {
     }
 
     private DataFrame creer_dataframe_labels(){
-        String[] types = {"int", "String", "double"};
-        DataFrame df = new DataFrame(types);
+        List<String> columnTypes = new ArrayList<>(Arrays.asList("int", "String", "double"));
+        DataFrame df = new DataFrame(columnTypes);
         df.getData().get("col0").addAll(Arrays.asList(1, 2, 3));
         df.getData().get("col1").addAll(Arrays.asList("Han", "Leia", "Luke"));
         df.getData().get("col2").addAll(Arrays.asList(10.5, 20.2, 30.3));
@@ -104,28 +108,28 @@ public class DataFrameConstructueurTest {
     @Test
     public void testConstructorFromLabels() {
         DataFrame df = creer_dataframe_labels();
-        String[] labels = {"col0", "col2"};
+        List<String> labels = new ArrayList<>(Arrays.asList("col0", "col2"));
         DataFrame newDf = new DataFrame(df, labels);
         assertNotNull("le DataFrame cree ne doit pas etre null",newDf);
     }
 
     public void testConstructorFromLabels1() {
         DataFrame df = creer_dataframe_labels();
-        String[] labels = {"col0", "col2"};
+        List<String> labels = new ArrayList<>(Arrays.asList("col0", "col2"));
         DataFrame newDf = new DataFrame(df, labels);
         assertTrue("La nouvelle colonne a le bon label que la colonne source recuperee par son label",newDf.getData().containsKey("col0"));
     }
 
     public void testConstructorFromLabels2() {
         DataFrame df = creer_dataframe_labels();
-        String[] labels = {"col0", "col2"};
+        List<String> labels = new ArrayList<>(Arrays.asList("col0", "col2"));
         DataFrame newDf = new DataFrame(df, labels);
         assertTrue("La nouvelle colonne a le bon label que la colonne source recuperee par son label",newDf.getData().containsKey("col2"));
     }
 
     public void testConstructorFromLabels3() {
         DataFrame df = creer_dataframe_labels();
-        String[] labels = {"col0", "col2"};
+        List<String> labels = new ArrayList<>(Arrays.asList("col0", "col2"));
         DataFrame newDf = new DataFrame(df, labels);
         assertFalse("La nouvelle colonne a le bon label que la colonne source recuperee par son label",newDf.getData().containsKey("col1"));
     }
@@ -133,7 +137,7 @@ public class DataFrameConstructueurTest {
     @Test
     public void testConstructorFromLabels4() {
         DataFrame df = creer_dataframe_labels();
-        String[] labels = {"col0", "col2"};
+        List<String> labels = new ArrayList<>(Arrays.asList("col0", "col2"));
         DataFrame newDf = new DataFrame(df, labels);
         Map<String, List<Object>> newData = newDf.getData();
         assertEquals("La colonne du nouveau DataFrame a les memes valeurs que la colonne source recuperee par son label",Arrays.asList(1, 2, 3), newData.get("col0"));
@@ -142,7 +146,7 @@ public class DataFrameConstructueurTest {
     @Test
     public void testConstructorFromLabels5() {
         DataFrame df = creer_dataframe_labels();
-        String[] labels = {"col0", "col2"};
+        List<String> labels = new ArrayList<>(Arrays.asList("col0", "col2"));
         DataFrame newDf = new DataFrame(df, labels);
         Map<String, List<Object>> newData = newDf.getData();
         assertEquals("La colonne du nouveau DataFrame a les memes valeurs que la colonne source recuperee par son label",Arrays.asList(10.5, 20.2, 30.3), newData.get("col2"));
@@ -163,11 +167,11 @@ public class DataFrameConstructueurTest {
     */
     @Test(expected = IllegalArgumentException.class)
     public void testUnknownColumnInConstructor() {
-        String[] types = {"int", "String"};
+        List<String> types = new ArrayList<>(Arrays.asList("int", "String"));
         DataFrame df = new DataFrame(types);
         df.getData().get("col0").add(1);
         df.getData().get("col1").add("A");
-        new DataFrame(df, new String[]{"col0", "invalide"});
+        new DataFrame(df, new ArrayList<>(Arrays.asList("col0", "invalide")));
     }
 
     /**
@@ -175,7 +179,7 @@ public class DataFrameConstructueurTest {
      */
     @Test(expected = IndexOutOfBoundsException.class)
     public void testOutOfBoundsIndexInConstructor() {
-        String[] types = {"int", "String"};
+        List<String> types = new ArrayList<>(Arrays.asList("int", "String"));
         DataFrame df = new DataFrame(types);
         df.getData().get("col0").add(1);
         df.getData().get("col1").add("A");
