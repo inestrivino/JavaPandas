@@ -1,4 +1,5 @@
 package org.JavaPandas;
+import java.util.List;
 
 public interface DataFrameInterface {
     //Representation methods
@@ -7,8 +8,8 @@ public interface DataFrameInterface {
     public void showDataFrame();
 
     //Addition methods
-    public void addRow();
-    public void addCol(String label);
+    public void addRow(Object[] values);
+    public void addCol(String label, String type, List<String> values);
 
     //Statistical calculation methods
     public void sum(String label);
