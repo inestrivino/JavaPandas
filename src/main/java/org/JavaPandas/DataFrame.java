@@ -63,7 +63,7 @@ public class DataFrame implements DataFrameInterface{
                 data.put(columnNames[i], typedCol);  //mettre la colonne dans le dataframe
             }
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException("Erreur CSV", e);
         }
     }
 
@@ -192,21 +192,75 @@ public class DataFrame implements DataFrameInterface{
     }
 
     @Override
-    public void quantile(String label) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'quantile'");
+    public DataFrame cumsum(String label) {
+        List<Object> column = data.get(label);
+        String type = getColumnType(label);
+        if (type == null || (!type.equals("int") && !type.equals("double"))) {
+            throw new IllegalArgumentException("Column must be numeric (int or double).");
+        }
+        DataFrame dfCumsum = new DataFrame(this, getColumnNames());
+        double cumulativeSum = 0.0;
+        for (int i = 0; i < column.size(); i++) {
+            cumulativeSum += ((Number) column.get(i)).doubleValue();
+            dfCumsum.getData().get(label).set(i, cumulativeSum);
+        }
+        return dfCumsum;
     }
 
     @Override
-    public void cumsum(String label) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'cumsum'");
+    public DataFrame cumprod(String label) {
+        List<Object> column = data.get(label);
+        String type = getColumnType(label);
+        if (type == null || (!type.equals("int") && !type.equals("double"))) {
+            throw new IllegalArgumentException("Column must be numeric (int or double).");
+        }
+        DataFrame dfCumprod = new DataFrame(this, getColumnNames());
+        double cumulativeProd = 1.0;
+        for (int i = 0; i < column.size(); i++) {
+            cumulativeProd *= ((Number) column.get(i)).doubleValue();
+            dfCumprod.getData().get(label).set(i, cumulativeProd);
+        }
+        return dfCumprod;
     }
 
-    @Override
-    public void cumprod(String label) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'cumprod'");
+    public double max(String label) {
+        List<Object> column = data.get(label);
+        String type = getColumnType(label);
+        if (type == null || (!type.equals("int") && !type.equals("double"))) {
+            throw new IllegalArgumentException("Column must be numeric (int or double).");
+        }
+        //colonne vide
+        /*if(column.size() == 0){
+            
+        }*/
+        double max = ((Number) column.get(0)).doubleValue();
+        double courant = 0;
+        for (int i = 0; i < column.size(); i++) {
+            courant = ((Number) column.get(i)).doubleValue();
+            if(courant>max)
+                max=courant;
+        }
+        return max;
+    }
+
+    public double min(String label) {
+        List<Object> column = data.get(label);
+        String type = getColumnType(label);
+        if (type == null || (!type.equals("int") && !type.equals("double"))) {
+            throw new IllegalArgumentException("Column must be numeric (int or double).");
+        }
+        //colonne vide
+        /*if(column.size() == 0){
+            
+        }*/
+        double min = ((Number) column.get(0)).doubleValue();
+        double courant = 0;
+        for (int i = 0; i < column.size(); i++) {
+            courant = ((Number) column.get(i)).doubleValue();
+            if(courant<min)
+                min=courant;
+        }
+        return min;
     }
 
     //TODO: Mechanism for advanced selection
