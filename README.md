@@ -3,6 +3,8 @@
 
 ## Information basique
 
+Cette bibliothèque Java implémente une partie des fonctionnalités de la [bibliothèque Python du même nom](https://github.com/pandas-dev/pandas). Elle a été créée dans le cadre d'un projet étudiant à l'Université Grenoble Alpes.
+
 Lien du site : https://inestrivino.github.io/JavaPandas/
 
 ## Table des contenus
@@ -11,10 +13,11 @@ Lien du site : https://inestrivino.github.io/JavaPandas/
   - [Information basique](#information-basique)
   - [Table des contenus](#table-des-contenus)
   - [Fonctionnalités principales](#fonctionnalités-principales)
-  - [Instalation et utilisation](#instalation-et-utilisation)
+  - [Installation et utilisation](#installation-et-utilisation)
   - [Workflow et revue du code](#workflow-et-revue-du-code)
   - [Outils utilisés](#outils-utilisés)
-  - [Déroulment du projet / Feedback sur les outils](#déroulment-du-projet--feedback-sur-les-outils)
+  - [Github Actions](#github-actions)
+  - [Déroulement du projet et feedback sur les outils](#déroulement-du-projet-et-feedback-sur-les-outils)
   - [Documentation](#documentation)
 
 ## Fonctionnalités principales
@@ -117,7 +120,21 @@ Une fois votre code soumis et après avoir passé tous les tests, il sera examin
 - [Docker](https://www.docker.com/) et [Github Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry): Utilisés pour créer et deployer l'image du demo du projet.
 - [Github Pages](https://pages.github.com/): Utilisé pour le site web et documentation du projet.
 
-## Déroulement du projet / Feedback sur les outils
+## Github Actions
+
+Voici une explication détaillée de nos GitHub Actions pour ce projet :
+
+1. <b>Tests unitaires</b> : Cette action est dédiée à 5 fonctionnalités principales. En plus, un branch ne peut pas merger avec main si elle ne passe pas cette action.
+   1. <b>Compilation du projet Maven</b>: via la commande mvn compile.
+   2. <b>Exécution des tests</b>: via la commande mvn test.
+   3. <b>Validation de la couverture des tests</b>: Tout d'abord, nous exécutons mvn verify et mvn jacoco:report pour produire le rapport de couverture. Ensuite, nous installons libxml2-utils et l'exécutons pour extraire le nombre d'instructions manquées et couvertes selon le rapport JaCoCo. Avec ces informations, nous vérifions si les deux valeurs sont à 0 (auquel cas la couverture est de 100 %, car il n'y a rien à couvrir), si seules les instructions couvertes sont à 0, ou si nous devons calculer le pourcentage à partir des valeurs couvertes et manquées. Enfin, nous nous assurons que la couverture est soit de 80 % ou plus.
+   4. <b>Déploiement du package Maven</b>: Une fois que nous avons garanti que la couverture est satisfaisante, nous utilisons mvn deploy pour produire un package à publier.
+   5. <b>Déploiement des fichiers pour le site Maven auto-mis à jour.</b>
+   6. SUPPLÉMENTAIRE : Le badge en haut de ce README est configuré pour suivre le résultat de cette action, montrant rapidement aux utilisateurs potentiels si la version actuelle est stable et vérifiée.
+2. <b>pages-build-deployment</b>: Cette action, dont les informations se trouvent principalement dans la branche gh-pages, est dédiée à la construction et au déploiement automatiques du site web du dépôt, qui inclut la documentation.
+3. <b>Docker</b>: Ce workflow construit l'image de la démo et la publie sur le registre de conteneurs GitHub. Il est déclenché par la fin réussie de l'action des tests unitaires (c'est-à-dire qu'il ne s'exécute qu'une fois que nous avons garanti un pourcentage de couverture des tests et une compilation réussie).
+
+## Déroulement du projet et feedback sur les outils
 
 Certains des outils que nous avons décidé d'utiliser, comme Maven, nous étaient familiers et donc simples et fluides à utiliser. 
 
