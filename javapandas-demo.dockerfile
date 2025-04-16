@@ -8,7 +8,7 @@ WORKDIR /app
 COPY src/main/java/org/JavaPandas/DataFrame.java /app/src/main/java/org/JavaPandas/
 
 # Compiler le fichier Java
-RUN mkdir -p /app/src/main/java/org/JavaPandas && javac /app/src/main/java/org/JavaPandas/DataFrame.java
+RUN javac /app/src/main/java/org/JavaPandas/DataFrame.java
 
 # Définir la commande par défaut pour exécuter le programme
 CMD ["java", "org.JavaPandas.DataFrame"]
