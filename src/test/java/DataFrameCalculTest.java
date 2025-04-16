@@ -1,8 +1,5 @@
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
-
-import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
 
@@ -52,7 +49,7 @@ public class DataFrameCalculTest {
     public void testSumEmptyColumn() {
         DataFrame df = creer_DataFrame();
         df.getData().get("col0").clear();
-        assertEquals("la sonne d'une colonne vide doit valoir 0.0",0.0, df.sum("col0"), 0.0001);
+        assertEquals("la somme d'une colonne vide doit valoir 0.0",0.0, df.sum("col0"), 0.0001);
     }
 
     @Test
@@ -340,6 +337,14 @@ public class DataFrameCalculTest {
         df.max("inexistant");
     }
 
+    //appeler max sur une colonne vide doit renvoyer une IllegalArgumentException
+    @Test(expected = IllegalArgumentException.class)
+    public void testMax7() {
+        DataFrame df = creer_DataFrame();
+        df.getData().get("col0").clear();
+        df.max("col0");
+    }
+
     //min
 
     @Test
@@ -382,6 +387,14 @@ public class DataFrameCalculTest {
     public void testMin6() {
         DataFrame df = creer_DataFrame();
         df.min("inexistant");
+    }
+
+    //appeler min sur une colonne vide doit renvoyer une IllegalArgumentException
+    @Test(expected = IllegalArgumentException.class)
+    public void testMin7() {
+        DataFrame df = creer_DataFrame();
+        df.getData().get("col0").clear();
+        df.min("col0");
     }
 
 }

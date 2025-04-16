@@ -229,10 +229,8 @@ public class DataFrame implements DataFrameInterface{
         if (type == null || (!type.equals("int") && !type.equals("double"))) {
             throw new IllegalArgumentException("Column must be numeric (int or double).");
         }
-        //colonne vide
-        /*if(column.size() == 0){
-            
-        }*/
+        if(column.size() == 0)
+            throw new IllegalArgumentException("Column must not be empty");
         double max = ((Number) column.get(0)).doubleValue();
         double courant = 0;
         for (int i = 0; i < column.size(); i++) {
@@ -250,9 +248,8 @@ public class DataFrame implements DataFrameInterface{
             throw new IllegalArgumentException("Column must be numeric (int or double).");
         }
         //colonne vide
-        /*if(column.size() == 0){
-            
-        }*/
+        if(column.size() == 0)
+            throw new IllegalArgumentException("Column must not be empty");
         double min = ((Number) column.get(0)).doubleValue();
         double courant = 0;
         for (int i = 0; i < column.size(); i++) {
