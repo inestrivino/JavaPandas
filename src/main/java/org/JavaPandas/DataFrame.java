@@ -17,6 +17,7 @@ public class DataFrame implements DataFrameInterface{
     //crée un dataframe avec les types des colonnes uniquement
     public DataFrame(String[] columnTypes) {
         this.columnTypes = columnTypes;
+        //TODO ON NE PEUT PAS CRÉER DES COLOMNES DE TYPE QUE STRING INT ET DOUBLE
         this.data = new HashMap<>();
         
         //initialisation des noms de colonnes (nom générique col0, col1, ...)
@@ -190,7 +191,75 @@ public class DataFrame implements DataFrameInterface{
         throw new UnsupportedOperationException("Unimplemented method 'cumprod'");
     }
 
-    //TODO: Mechanism for advanced selection
+    /*-----QUERY-----*/
+    //advanced selection method based on a condition
+    public void query(String condition){
+        //we start by parsing the condition
+        //we assume conditions are of the type "'column1' 'operator' 'column2'"
+        //operators may be: < <= > >= ==
+        String[] parts = condition.split("\\s+");    
+        if(parts.length != 3) throw new IllegalArgumentException("The query condition could not be parsed into two columns and an operator");
+        String column1 = parts[0];
+        String column2 = parts[2];
+
+        //we check that both columns are not the same
+        if(column1.equals(column2)) throw new IllegalArgumentException("Cannot compare column with itself");
+
+        //we check that both columns exist in the dataframe and that they are int or double type
+        String typeCol1 = getColumnType(column1);
+        String typeCol2 = getColumnType(column2);
+        if(typeCol1==null || typeCol2==null){
+            throw new IllegalArgumentException("Columns do not exist");
+        }
+        if(typeCol1=="String" || typeCol2=="String"){
+            throw new IllegalArgumentException("String type columns cannot be compared");
+        }
+
+        //once parsed we apply the selection
+        int sizeToCheck = Math.min(data.get(column1).size(), data.get(column2).size());
+        DataFrame result = new DataFrame(columnTypes);
+        List<Object> column1Data = data.get(column1);
+        List<Object> column2Data = data.get(column2);
+        switch (parts[1]) {
+            case "==":
+                for(int i=0; i<sizeToCheck; i++){
+                    if(column1Data.get(i)==column2Data.get(i)){
+                        result.addRow(); //TODO bien implementer la creation de tout ça + le methode de creation qu'il manque
+                    }
+                }
+                break;
+            case "<":
+                for(int i=0; i<sizeToCheck; i++){
+                    if((Double)column1Data.get(i)<(Double)column2Data.get(i)){
+                        result.addRow(); //TODO bien implementer la creation de tout ça + le methode de creation qu'il manque
+                    }
+                }
+                break;
+            case ">":
+                for(int i=0; i<sizeToCheck; i++){
+                    if((Double)column1Data.get(i)>(Double)column2Data.get(i)){
+                        result.addRow(); //TODO bien implementer la creation de tout ça + le methode de creation qu'il manque
+                    }
+                }
+                break;
+            case "<=":
+                for(int i=0; i<sizeToCheck; i++){
+                    if((Double)column1Data.get(i)<=(Double)column2Data.get(i)){
+                        result.addRow(); //TODO bien implementer la creation de tout ça + le methode de creation qu'il manque
+                    }
+                }  
+                break;
+            case ">=":
+                for(int i=0; i<sizeToCheck; i++){
+                    if((Double)column1Data.get(i)>=(Double)column2Data.get(i)){
+                        result.addRow(); //TODO bien implementer la creation de tout ça + le methode de creation qu'il manque
+                    }
+                }
+                break;
+            default:
+                throw new IllegalArgumentException("Unsupported operator: " + parts[1]);
+        }
+    }
 
     /*-----GETTERS-----*/
     //get the names of columns
