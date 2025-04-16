@@ -3,6 +3,8 @@
 
 ## Information basique
 
+Lien du site : https://inestrivino.github.io/JavaPandas/
+
 ## Table des contenus
 
 - [JavaPandas](#javapandas)
@@ -38,7 +40,7 @@
 - Récupérer les labels et les types des colonnes d'un DataFrame
 - Récupérer les données stockées dans un DataFrame
 
-## Instalation et utilisation
+## Installation et utilisation
 
 Pour installer la bibliothèque à partir du snapshot public, suivez ces étapes :
 1. Ajouter la dépendance à votre projet Maven: Incluez la dépendance de la bibliothèque dans votre fichier pom.xml.
@@ -115,7 +117,7 @@ Une fois votre code soumis et après avoir passé tous les tests, il sera examin
 - [Docker](https://www.docker.com/) et [Github Container Registry](https://docs.github.com/en/packages/working-with-a-github-packages-registry/working-with-the-container-registry): Utilisés pour créer et deployer l'image du demo du projet.
 - [Github Pages](https://pages.github.com/): Utilisé pour le site web et documentation du projet.
 
-## Déroulment du projet / Feedback sur les outils
+## Déroulement du projet / Feedback sur les outils
 
 Certains des outils que nous avons décidé d'utiliser, comme Maven, nous étaient familiers et donc simples et fluides à utiliser. 
 
